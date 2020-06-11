@@ -1,2 +1,4 @@
 *.h.gch
+*.hpp.gch
 *.exe
+test.cpp
