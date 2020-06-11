@@ -1,6 +1,8 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
+#include <set>
+#include <queue>
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -16,256 +18,39 @@ public:
     Graph();
     ~Graph();
 
+    // Given an object, adds it to the graph, if it doesn't exist already.
     bool addVertex(T);
+    // Given a list of objects, adds each of them to the graph, if it doesn't exist already.
     bool addVertices(const std::vector<T> &);
+    // Given two objects, adds the edge between them to the graph, if it doesn't exist already.
     bool addEdge(T, T);
+    // Given a list of pair of objects, adds each edge to the graph, if it doesn't exist already.
     bool addEdges(const std::vector<std::pair<T, T>> &);
     
+    // Given an object, removes it and its edges from the graph, if it exists.
     bool removeVertex(T);
+    // Given a list of objects, removes each of them and its edges from the graph, if it exists.
     bool removeVertices(const std::vector<T> &);
+    // Given two objects, removes the edge between them from the graph, if it exists.
     bool removeEdge(T, T);
+    // Given a list of pair of objects, removes each edge from the graph, if it exists.
     bool removeEdges(const std::vector<std::pair<T, T>> &);
 
-    
+    // Helper function to print DFS; takes starting vertex and set of visited vertices.
+    void printDFS(const T &, std::set<T> &) const;
+    // Function to print DFS; prints each connected component on different line.
+    void printDFS() const;
+    // Helper function to print BFS; takes starting vertex and set of visited vertices.
+    void printBFS(const T &, std::set<T> &) const;
+    // Function to print BFS; prints each connected component on different line.
+    void printBFS() const;
+
+    // Prints the Adjacency list of the graph.
     void printGraph() const;
+    // Returns the degree of a vertex, if it exists. If the vertex doesn't exist, returns -1.
     int getDegree(T) const;
 };
 
-template<typename T>
-Graph<T>::Graph() {}
-
-template<typename T>
-Graph<T>::~Graph() { _ADJACENCY_LIST_.clear(); }
-
-template<typename T>
-bool Graph<T>::addVertex(T vertex)
-{
-    try
-    {
-        _ADJACENCY_LIST_.insert(make_pair(vertex, std::vector<T>()));
-        return true;
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-        return false;
-    }
-}
-
-template<typename T>
-bool Graph<T>::addVertices(const std::vector<T> &vertices)
-{
-    try
-    {
-        for(const T &v : vertices)
-        {
-            _ADJACENCY_LIST_.insert(make_pair(v, std::vector<T>()));
-        }
-        return true;
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-        return false;
-    }
-}
-
-template<typename T>
-bool Graph<T>::addEdge(T vertex1, T vertex2)
-{
-    try
-    {
-        if(_ADJACENCY_LIST_.find(vertex1) == _ADJACENCY_LIST_.end())
-        {
-            _ADJACENCY_LIST_[vertex1] = std::vector<T>{vertex2};
-        }
-        else
-        {
-            std::vector<T> edge_list = _ADJACENCY_LIST_.at(vertex1);
-            if(std::find(edge_list.begin(), edge_list.end(), vertex2) == edge_list.end())
-                _ADJACENCY_LIST_.at(vertex1).push_back(vertex2);
-        }
-
-        if(_ADJACENCY_LIST_.find(vertex2) == _ADJACENCY_LIST_.end())
-        {
-            _ADJACENCY_LIST_[vertex2] = std::vector<T>{vertex1};
-        }
-        else
-        {
-            std::vector<T> edge_list = _ADJACENCY_LIST_.at(vertex2);
-            if(std::find(edge_list.begin(), edge_list.end(), vertex1) == edge_list.end())
-                _ADJACENCY_LIST_.at(vertex2).push_back(vertex1);
-        }
-
-        return true;
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-        return false;
-    }
-}
-
-template<typename T>
-bool Graph<T>::addEdges(const std::vector<std::pair<T, T>> &edges)
-{
-    try
-    {
-        for(const std::pair<T, T> &e : edges)
-        {
-            T vertex1 = e.first;
-            T vertex2 = e.second;
-            if(_ADJACENCY_LIST_.find(vertex1) == _ADJACENCY_LIST_.end())
-            {
-                _ADJACENCY_LIST_[vertex1] = std::vector<T>{vertex2};
-            }
-            else
-            {
-                std::vector<T> edge_list = _ADJACENCY_LIST_.at(vertex1);
-                if(std::find(edge_list.begin(), edge_list.end(), vertex2) == edge_list.end())
-                    _ADJACENCY_LIST_.at(vertex1).push_back(vertex2);
-            }
-
-            if(_ADJACENCY_LIST_.find(vertex2) == _ADJACENCY_LIST_.end())
-            {
-                _ADJACENCY_LIST_[vertex2] = std::vector<T>{vertex1};
-            }
-            else
-            {
-                std::vector<T> edge_list = _ADJACENCY_LIST_.at(vertex2);
-                if(std::find(edge_list.begin(), edge_list.end(), vertex1) == edge_list.end())
-                    _ADJACENCY_LIST_.at(vertex2).push_back(vertex1);
-            }
-        }
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-        return false;
-    }    
-}
-
-template<typename T>
-bool Graph<T>::removeVertex(T vertex)
-{
-    try
-    {
-        _ADJACENCY_LIST_.erase(vertex);
-        for(auto it = _ADJACENCY_LIST_.begin(); it != _ADJACENCY_LIST_.end(); it++)
-        {
-            if(std::find(it->second.begin(), it->second.end(), vertex) != it->second.end())
-            {
-                it->second.erase(std::remove(it->second.begin(), it->second.end(), vertex));
-            }
-        }
-        return true;
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-        return false;
-    }
-}
-
-template<typename T>
-bool Graph<T>::removeVertices(const std::vector<T> &vertices)
-{
-    try
-    {
-        for(const T &vertex : vertices)
-        {
-            _ADJACENCY_LIST_.erase(vertex);
-            for(auto it = _ADJACENCY_LIST_.begin(); it != _ADJACENCY_LIST_.end(); it++)
-            {
-                if(std::find(it->second.begin(), it->second.end(), vertex) != it->second.end())
-                {
-                    it->second.erase(std::remove(it->second.begin(), it->second.end(), vertex));
-                }
-            }      
-        }
-        return true;
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-        return false;
-    }
-}
-
-template<typename T>
-bool Graph<T>::removeEdge(T vertex1, T vertex2)
-{
-    try
-    {
-        std::vector<T> &edge_list1 = _ADJACENCY_LIST_.at(vertex1);
-        if(std::find(edge_list1.begin(), edge_list1.end(), vertex2) != edge_list1.end())
-        {
-            edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), vertex2));
-        }
-
-        std::vector<T> &edge_list2 = _ADJACENCY_LIST_.at(vertex2);
-        if(std::find(edge_list2.begin(), edge_list2.end(), vertex1) != edge_list2.end())
-        {
-            edge_list2.erase(std::remove(edge_list2.begin(), edge_list2.end(), vertex1));
-        }
-        return true;
-    }
-    catch(const std::exception& e)
-    {
-        std::cout << e.what() << '\n';
-        return false;
-    }
-}
-
-template<typename T>
-bool Graph<T>::removeEdges(const std::vector<std::pair<T, T>> &edges)
-{
-    try
-    {
-        for(const std::pair<T, T> &e : edges)
-        {
-            T vertex1 = e.first;
-            T vertex2 = e.second;
-            std::vector<T> &edge_list1 = _ADJACENCY_LIST_.at(vertex1);
-            if(std::find(edge_list1.begin(), edge_list1.end(), vertex2) != edge_list1.end())
-            {
-                edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), vertex2));
-            }
-
-            std::vector<T> &edge_list2 = _ADJACENCY_LIST_.at(vertex2);
-            if(std::find(edge_list2.begin(), edge_list2.end(), vertex1) != edge_list2.end())
-            {
-                edge_list2.erase(std::remove(edge_list2.begin(), edge_list2.end(), vertex1));
-            }
-        }
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-        return false;
-    }
-}
-
-template<typename T>
-void Graph<T>::printGraph() const
-{
-    std::cout << "ADJACENCY LIST" << '\n';
-    for(const std::pair<T, std::vector<T>> &e : _ADJACENCY_LIST_)
-    {
-        std::cout << e.first << " ->  ";
-        for(const T &i : e.second)
-            std::cout << i << ", ";
-        std::cout << '\n';
-    }
-}
-
-template<typename T>
-int Graph<T>::getDegree(T vertex) const
-{
-    if(_ADJACENCY_LIST_.find(vertex) != _ADJACENCY_LIST_.end())
-        return _ADJACENCY_LIST_.at(vertex).size();
-    else
-        return -1;
-}
+#include "GraphDefinitions.hpp"
 
 #endif
