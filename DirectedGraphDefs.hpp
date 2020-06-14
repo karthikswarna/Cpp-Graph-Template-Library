@@ -189,12 +189,79 @@ namespace Graph
     template<typename T>
     bool DirectedGraph<T>::isCyclic() const
     {
+        std::unordered_set<unsigned int> whiteSet;      // Unvisited
+        std::unordered_set<unsigned int> greySet;       // Visited, but not completely processed.
+        std::unordered_set<unsigned int> blackSet;      // Visited completely.
 
+        for(const std::pair<unsigned int, std::vector<unsigned int>> &i : this->_ADJACENCY_LIST_)
+            whiteSet.insert(i.first);
+        
+        while(whiteSet.size() > 0)
+        {
+            if(isCyclic(*whiteSet.begin(), whiteSet, greySet, blackSet))
+                return true;
+        }
+        
+        return false;
+    }
+
+    template<typename T>
+    bool DirectedGraph<T>::isCyclic(unsigned int start, std::unordered_set<unsigned int> &whiteSet, std::unordered_set<unsigned int> &greySet, std::unordered_set<unsigned int> &blackSet) const
+    {
+        greySet.insert(start);
+        whiteSet.erase(start);
+
+        for(unsigned int dest : this->_ADJACENCY_LIST_.at(start))
+        {
+            if(blackSet.find(dest) != blackSet.end())
+                continue;
+            if(greySet.find(dest) != greySet.end())
+                return true;
+            if(whiteSet.find(dest) != whiteSet.end() && isCyclic(dest, whiteSet, greySet, blackSet))
+                return true;
+        }
+
+        greySet.erase(start);
+        blackSet.insert(start);
+        return false;
     }
 
     template<typename T>
     std::vector<T> DirectedGraph<T>::TopologicalSort() const
     {
+        if(isCyclic())
+            return std::vector<T>{};
+
+        std::unordered_set<unsigned int> Visited;
+        unsigned int index = this->_ADJACENCY_LIST_.size();
+        std::vector<T> TopSort(index);
+
+        for(const std::pair<unsigned int, std::vector<unsigned int>> &edges : this->_ADJACENCY_LIST_)
+        {
+            if(Visited.find(edges.first) == Visited.end())
+            {
+                std::vector<unsigned int> VisitedNodes;
+                DFSUtil(edges.first, Visited, VisitedNodes);
+
+                for(unsigned int v : VisitedNodes)
+                    TopSort[--index] = this->_id_to_node_.at(v);
+            }
+        }
+
+        return TopSort;
+    }
+
+    template<typename T>
+    void DirectedGraph<T>::DFSUtil(unsigned int start, std::unordered_set<unsigned int> &Visited, std::vector<unsigned int> &VisitedNodes) const
+    {
+        Visited.insert(start);
+        for(unsigned int dest : this->_ADJACENCY_LIST_.at(start))
+        {
+            if(Visited.find(dest) == Visited.end())
+                DFSUtil(dest, Visited, VisitedNodes);
+        }
+
+        VisitedNodes.push_back(start);
     }
     
     template<typename T>

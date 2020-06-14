@@ -54,6 +54,13 @@ namespace Graph
             // Returns the (in-degree, out-degree) of a vertex as std::pair<int, int>, if the vertex exists. 
             // If the vertex doesn't exist, returns -1.
             std::pair<int, int> getDegree(T) const;
+        
+        private:
+            // Utility Function used for topoligical sort.
+            void DFSUtil(unsigned int, std::unordered_set<unsigned int> &, std::vector<unsigned int> &) const;
+            // Utility function for finding cycles in directed graph.
+            bool isCyclic(unsigned int, std::unordered_set<unsigned int> &, std::unordered_set<unsigned int> &, std::unordered_set<unsigned int> &) const;
+            
     };
 }
 
