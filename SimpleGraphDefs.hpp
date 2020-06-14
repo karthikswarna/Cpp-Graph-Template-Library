@@ -6,17 +6,68 @@
 namespace Graph
 {
     template<typename T>
-    SimpleGraph<T>::SimpleGraph() {}
+    SimpleGraph<T>::SimpleGraph() noexcept
+    {
+    }
 
     template<typename T>
-    SimpleGraph<T>::~SimpleGraph() { this->_ADJACENCY_LIST_.clear(); }
+    SimpleGraph<T>::SimpleGraph(const SimpleGraph &rhs) noexcept
+        : _ADJACENCY_LIST_ ( rhs._ADJACENCY_LIST_ )
+        , _id_to_node_ ( rhs._id_to_node_ )
+        , _node_to_id_ (rhs._node_to_id_)
+        , _id_ ( rhs._id_ )
+    {
+    }
+
+    template<typename T>
+    SimpleGraph<T>::SimpleGraph(SimpleGraph &&rhs) noexcept
+        : _ADJACENCY_LIST_ ( std::move(rhs._ADJACENCY_LIST_) )
+        , _id_to_node_ ( std::move(rhs._id_to_node_) )
+        , _node_to_id_ ( std::move(rhs._node_to_id_) )
+        , _id_ ( std::move(rhs._id_) )
+    {
+    }
+
+    template<typename T>
+    SimpleGraph<T>& SimpleGraph<T>::operator=(const SimpleGraph &rhs) noexcept
+    {
+        this->_ADJACENCY_LIST_ = rhs._ADJACENCY_LIST_;
+        this->_id_to_node_ = rhs._id_to_node_;
+        this->_node_to_id_ = rhs._node_to_id_;
+        this->_id_ = rhs._id_;
+        return *this;
+    }
+
+    template<typename T>
+    SimpleGraph<T>& SimpleGraph<T>::operator=(SimpleGraph &&rhs) noexcept
+    {
+        this->_ADJACENCY_LIST_ = std::move(rhs._ADJACENCY_LIST_);
+        this->_id_to_node_ = std::move(rhs._id_to_node_);
+        this->_node_to_id_ = std::move(rhs._node_to_id_);
+        this->_id_ = std::move(rhs._id_);
+        return *this;
+    }
+
+    template<typename T>
+    SimpleGraph<T>::~SimpleGraph() noexcept 
+    { 
+        this->_ADJACENCY_LIST_.clear();
+        this->_id_to_node_.clear();
+        this->_node_to_id_.clear();
+    }
 
     template<typename T>
     bool SimpleGraph<T>::addVertex(T vertex)
     {
         try
         {
-            this->_ADJACENCY_LIST_.insert(make_pair(vertex, std::vector<T>()));
+            if(this->_node_to_id_.find(vertex) == this->_node_to_id_.end())
+            {
+                this->_id_to_node_.insert(std::make_pair(this->_id_, vertex));
+                this->_node_to_id_.insert(std::make_pair(vertex, this->_id_));
+                this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<unsigned int>()));
+                (this->_id_)++;
+            }
             return true;
         }
         catch(const std::exception& e)
@@ -31,9 +82,15 @@ namespace Graph
     {
         try
         {
-            for(const T &v : vertices)
+            for(const T &vertex : vertices)
             {
-                this->_ADJACENCY_LIST_.insert(make_pair(v, std::vector<T>()));
+                if(this->_node_to_id_.find(vertex) == this->_node_to_id_.end())
+                {
+                    this->_id_to_node_.insert(std::make_pair(this->_id_, vertex));
+                    this->_node_to_id_.insert(std::make_pair(vertex, this->_id_));
+                    this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<unsigned int>()));
+                    (this->_id_)++;
+                }
             }
             return true;
         }
@@ -49,27 +106,34 @@ namespace Graph
     {
         try
         {
-            if(this->_ADJACENCY_LIST_.find(vertex1) == this->_ADJACENCY_LIST_.end())
+            // If vertex1 is not previously there, add it to the list of nodes.
+            if(this->_node_to_id_.find(vertex1) == this->_node_to_id_.end())
             {
-                this->_ADJACENCY_LIST_[vertex1] = std::vector<T>{vertex2};
-            }
-            else
-            {
-                std::vector<T> edge_list = this->_ADJACENCY_LIST_.at(vertex1);
-                if(std::find(edge_list.begin(), edge_list.end(), vertex2) == edge_list.end())
-                    this->_ADJACENCY_LIST_.at(vertex1).push_back(vertex2);
+                this->_id_to_node_.insert(std::make_pair(this->_id_, vertex1));
+                this->_node_to_id_.insert(std::make_pair(vertex1, this->_id_));
+                this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<unsigned int>{}));
+                (this->_id_)++;
             }
 
-            if(this->_ADJACENCY_LIST_.find(vertex2) == this->_ADJACENCY_LIST_.end())
+            // If vertex2 is not previously there, add it to the list of nodes.
+            if(this->_node_to_id_.find(vertex2) == this->_node_to_id_.end())
             {
-                this->_ADJACENCY_LIST_[vertex2] = std::vector<T>{vertex1};
+                this->_id_to_node_.insert(std::make_pair(this->_id_, vertex2));
+                this->_node_to_id_.insert(std::make_pair(vertex2, this->_id_));
+                this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<unsigned int>{}));
+                (this->_id_)++;
             }
-            else
-            {
-                std::vector<T> edge_list = this->_ADJACENCY_LIST_.at(vertex2);
-                if(std::find(edge_list.begin(), edge_list.end(), vertex1) == edge_list.end())
-                    this->_ADJACENCY_LIST_.at(vertex2).push_back(vertex1);
-            }
+
+            int id1 = this->_node_to_id_.at(vertex1);
+            int id2 = this->_node_to_id_.at(vertex2);
+
+            std::vector<unsigned int> edge_list = this->_ADJACENCY_LIST_.at(id1);
+            if(std::find(edge_list.begin(), edge_list.end(), id2) == edge_list.end())
+                this->_ADJACENCY_LIST_.at(id1).push_back(id2);
+
+            edge_list = this->_ADJACENCY_LIST_.at(id2);
+            if(std::find(edge_list.begin(), edge_list.end(), id1) == edge_list.end())
+                this->_ADJACENCY_LIST_.at(id2).push_back(id1);
 
             return true;
         }
@@ -89,27 +153,35 @@ namespace Graph
             {
                 T vertex1 = e.first;
                 T vertex2 = e.second;
-                if(this->_ADJACENCY_LIST_.find(vertex1) == this->_ADJACENCY_LIST_.end())
+                
+                // If vertex1 is not previously there, add it to the list of nodes.
+                if(this->_node_to_id_.find(vertex1) == this->_node_to_id_.end())
                 {
-                    this->_ADJACENCY_LIST_[vertex1] = std::vector<T>{vertex2};
-                }
-                else
-                {
-                    std::vector<T> edge_list = this->_ADJACENCY_LIST_.at(vertex1);
-                    if(std::find(edge_list.begin(), edge_list.end(), vertex2) == edge_list.end())
-                        this->_ADJACENCY_LIST_.at(vertex1).push_back(vertex2);
+                    this->_id_to_node_.insert(std::make_pair(this->_id_, vertex1));
+                    this->_node_to_id_.insert(std::make_pair(vertex1, this->_id_));
+                    this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<unsigned int>{}));
+                    (this->_id_)++;
                 }
 
-                if(this->_ADJACENCY_LIST_.find(vertex2) == this->_ADJACENCY_LIST_.end())
+                // If vertex2 is not previously there, add it to the list of nodes.
+                if(this->_node_to_id_.find(vertex2) == this->_node_to_id_.end())
                 {
-                    this->_ADJACENCY_LIST_[vertex2] = std::vector<T>{vertex1};
+                    this->_id_to_node_.insert(std::make_pair(this->_id_, vertex2));
+                    this->_node_to_id_.insert(std::make_pair(vertex2, this->_id_));
+                    this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<unsigned int>{}));
+                    (this->_id_)++;
                 }
-                else
-                {
-                    std::vector<T> edge_list = this->_ADJACENCY_LIST_.at(vertex2);
-                    if(std::find(edge_list.begin(), edge_list.end(), vertex1) == edge_list.end())
-                        this->_ADJACENCY_LIST_.at(vertex2).push_back(vertex1);
-                }
+
+                int id1 = this->_node_to_id_.at(vertex1);
+                int id2 = this->_node_to_id_.at(vertex2);
+
+                std::vector<unsigned int> edge_list = this->_ADJACENCY_LIST_.at(id1);
+                if(std::find(edge_list.begin(), edge_list.end(), id2) == edge_list.end())
+                    this->_ADJACENCY_LIST_.at(id1).push_back(id2);
+
+                edge_list = this->_ADJACENCY_LIST_.at(id2);
+                if(std::find(edge_list.begin(), edge_list.end(), id1) == edge_list.end())
+                    this->_ADJACENCY_LIST_.at(id2).push_back(id1);
             }
 
             return true;
@@ -126,13 +198,21 @@ namespace Graph
     {
         try
         {
-            this->_ADJACENCY_LIST_.erase(vertex);
-            for(typename std::unordered_map<T, std::vector<T>>::iterator it = this->_ADJACENCY_LIST_.begin(); it != this->_ADJACENCY_LIST_.end(); it++)
+            if(this->_node_to_id_.find(vertex) != this->_node_to_id_.end())
             {
-                if(std::find(it->second.begin(), it->second.end(), vertex) != it->second.end())
+                unsigned int id = this->_node_to_id_.at(vertex);
+                this->_id_to_node_.erase(id);
+                
+                this->_ADJACENCY_LIST_.erase(id);
+                for(typename std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator it = this->_ADJACENCY_LIST_.begin(); it != this->_ADJACENCY_LIST_.end(); it++)
                 {
-                    it->second.erase(std::remove(it->second.begin(), it->second.end(), vertex));
+                    if(std::find(it->second.begin(), it->second.end(), id) != it->second.end())
+                    {
+                        it->second.erase(std::remove(it->second.begin(), it->second.end(), id));
+                    }
                 }
+                
+                this->_node_to_id_.erase(vertex);
             }
 
             return true;
@@ -151,14 +231,22 @@ namespace Graph
         {
             for(const T &vertex : vertices)
             {
-                this->_ADJACENCY_LIST_.erase(vertex);
-                for(typename std::unordered_map<T, std::vector<T>>::iterator it = this->_ADJACENCY_LIST_.begin(); it != this->_ADJACENCY_LIST_.end(); it++)
+                if(this->_node_to_id_.find(vertex) != this->_node_to_id_.end())
                 {
-                    if(std::find(it->second.begin(), it->second.end(), vertex) != it->second.end())
+                    unsigned int id = this->_node_to_id_.at(vertex);
+                    this->_id_to_node_.erase(id);
+                    
+                    this->_ADJACENCY_LIST_.erase(id);
+                    for(typename std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator it = this->_ADJACENCY_LIST_.begin(); it != this->_ADJACENCY_LIST_.end(); it++)
                     {
-                        it->second.erase(std::remove(it->second.begin(), it->second.end(), vertex));
+                        if(std::find(it->second.begin(), it->second.end(), id) != it->second.end())
+                        {
+                            it->second.erase(std::remove(it->second.begin(), it->second.end(), id));
+                        }
                     }
-                }      
+                    
+                    this->_node_to_id_.erase(vertex);
+                }
             }
 
             return true;
@@ -175,21 +263,21 @@ namespace Graph
     {
         try
         {
-            if(this->_ADJACENCY_LIST_.find(vertex1) != this->_ADJACENCY_LIST_.end())
+            if(this->_node_to_id_.find(vertex1) != this->_node_to_id_.end() && this->_node_to_id_.find(vertex2) != this->_node_to_id_.end())
             {
-                std::vector<T> &edge_list1 = this->_ADJACENCY_LIST_.at(vertex1);
-                if(std::find(edge_list1.begin(), edge_list1.end(), vertex2) != edge_list1.end())
-                {
-                    edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), vertex2));
-                }
-            }
+                unsigned int id1 = this->_node_to_id_.at(vertex1);
+                unsigned int id2 = this->_node_to_id_.at(vertex2);
 
-            if(this->_ADJACENCY_LIST_.find(vertex2) != this->_ADJACENCY_LIST_.end())
-            {
-                std::vector<T> &edge_list2 = this->_ADJACENCY_LIST_.at(vertex2);
-                if(std::find(edge_list2.begin(), edge_list2.end(), vertex1) != edge_list2.end())
+                std::vector<unsigned int> &edge_list1 = this->_ADJACENCY_LIST_.at(id1);
+                if(std::find(edge_list1.begin(), edge_list1.end(), id2) != edge_list1.end())
                 {
-                    edge_list2.erase(std::remove(edge_list2.begin(), edge_list2.end(), vertex1));
+                    edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), id2));
+                }
+
+                std::vector<unsigned int> &edge_list2 = this->_ADJACENCY_LIST_.at(id2);
+                if(std::find(edge_list2.begin(), edge_list2.end(), id1) != edge_list2.end())
+                {
+                    edge_list2.erase(std::remove(edge_list2.begin(), edge_list2.end(), id1));
                 }
             }
 
@@ -212,21 +300,21 @@ namespace Graph
                 T vertex1 = e.first;
                 T vertex2 = e.second;
                 
-                if(this->_ADJACENCY_LIST_.find(vertex1) != this->_ADJACENCY_LIST_.end())
+                if(this->_node_to_id_.find(vertex1) != this->_node_to_id_.end() && this->_node_to_id_.find(vertex2) != this->_node_to_id_.end())
                 {
-                    std::vector<T> &edge_list1 = this->_ADJACENCY_LIST_.at(vertex1);
-                    if(std::find(edge_list1.begin(), edge_list1.end(), vertex2) != edge_list1.end())
-                    {
-                        edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), vertex2));
-                    }
-                }
+                    unsigned int id1 = this->_node_to_id_.at(vertex1);
+                    unsigned int id2 = this->_node_to_id_.at(vertex2);
 
-                if(this->_ADJACENCY_LIST_.find(vertex2) != this->_ADJACENCY_LIST_.end())
-                {
-                    std::vector<T> &edge_list2 = this->_ADJACENCY_LIST_.at(vertex2);
-                    if(std::find(edge_list2.begin(), edge_list2.end(), vertex1) != edge_list2.end())
+                    std::vector<unsigned int> &edge_list1 = this->_ADJACENCY_LIST_.at(id1);
+                    if(std::find(edge_list1.begin(), edge_list1.end(), id2) != edge_list1.end())
                     {
-                        edge_list2.erase(std::remove(edge_list2.begin(), edge_list2.end(), vertex1));
+                        edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), id2));
+                    }
+
+                    std::vector<unsigned int> &edge_list2 = this->_ADJACENCY_LIST_.at(id2);
+                    if(std::find(edge_list2.begin(), edge_list2.end(), id1) != edge_list2.end())
+                    {
+                        edge_list2.erase(std::remove(edge_list2.begin(), edge_list2.end(), id1));
                     }
                 }
             }
@@ -241,13 +329,13 @@ namespace Graph
     }
 
     template<typename T>
-    void SimpleGraph<T>::printDFS(const T &start, std::set<T> &Visited) const
+    void SimpleGraph<T>::printDFS(unsigned int start, std::unordered_set<unsigned int> &Visited) const
     {
         Visited.insert(start);
-        std::cout << start;
+        std::cout << this->_id_to_node_.at(start);
         
-        std::vector<T> edge_list = this->_ADJACENCY_LIST_.at(start);
-        for(const T &v : edge_list)
+        std::vector<unsigned int> edge_list = this->_ADJACENCY_LIST_.at(start);
+        for(unsigned int v : edge_list)
         {
             if(Visited.find(v) == Visited.end())
             {
@@ -262,8 +350,8 @@ namespace Graph
     {
         std::cout << "DEPTH FIRST SEARCH\n";
 
-        std::set<T> Visited;
-        for(const std::pair<T, std::vector<T>> &edges : this->_ADJACENCY_LIST_)
+        std::unordered_set<unsigned int> Visited;
+        for(const std::pair<unsigned int, std::vector<unsigned int>> &edges : this->_ADJACENCY_LIST_)
         {
             if(Visited.find(edges.first) == Visited.end())
             {
@@ -274,11 +362,11 @@ namespace Graph
     }
 
     template<typename T>
-    void SimpleGraph<T>::printBFS(const T &start, std::set<T> &Visited) const
+    void SimpleGraph<T>::printBFS(unsigned int start, std::unordered_set<unsigned int> &Visited) const
     {
-        std::queue<T> Q;
-        std::vector<T> path;
-        T temp = start;
+        std::queue<unsigned int> Q;
+        std::vector<unsigned int> path;
+        unsigned int temp = start;
         Q.push(temp);
         Visited.insert(temp);
 
@@ -288,7 +376,7 @@ namespace Graph
             Q.pop();
             path.push_back(temp);
 
-            for(const T &v : this->_ADJACENCY_LIST_.at(temp))
+            for(unsigned int v : this->_ADJACENCY_LIST_.at(temp))
             {
                 if(Visited.find(v) == Visited.end())
                 {
@@ -298,9 +386,9 @@ namespace Graph
             }
         }
 
-        for(typename std::vector<T>::iterator it = path.begin(); it < path.end(); it++)
+        for(typename std::vector<unsigned int>::iterator it = path.begin(); it < path.end(); it++)
         {
-            std::cout << *it;
+            std::cout << this->_id_to_node_.at(*it);
 
             if(it != path.end() - 1)
                 std::cout << " -> ";
@@ -313,8 +401,8 @@ namespace Graph
     {
         std::cout << "BREADTH FIRST SEARCH" << '\n';
 
-        std::set<T> Visited;
-        for(const std::pair<T, std::vector<T>> &edges : this->_ADJACENCY_LIST_)
+        std::unordered_set<unsigned int> Visited;
+        for(const std::pair<unsigned int, std::vector<unsigned int>> &edges : this->_ADJACENCY_LIST_)
         {
             if(Visited.find(edges.first) == Visited.end())
             {
@@ -328,12 +416,12 @@ namespace Graph
     void SimpleGraph<T>::printGraph() const
     {
         std::cout << "ADJACENCY LIST" << '\n';
-        for(const std::pair<T, std::vector<T>> &e : this->_ADJACENCY_LIST_)
+        for(const std::pair<unsigned int, std::vector<unsigned int>> &e : this->_ADJACENCY_LIST_)
         {
-            std::cout << e.first << " ->  ";
-            for(typename std::vector<T>::const_iterator it = e.second.begin(); it < e.second.end(); it++)
+            std::cout << this->_id_to_node_.at(e.first) << " ->  ";
+            for(typename std::vector<unsigned int>::const_iterator it = e.second.begin(); it < e.second.end(); it++)
             {
-                std::cout << *it;
+                std::cout << this->_id_to_node_.at(*it);
                 if(it != e.second.end() - 1)
                     std::cout << ", ";
             }
@@ -344,8 +432,8 @@ namespace Graph
     template<typename T>
     int SimpleGraph<T>::getDegree(T vertex) const
     {
-        if(this->_ADJACENCY_LIST_.find(vertex) != this->_ADJACENCY_LIST_.end())
-            return this->_ADJACENCY_LIST_.at(vertex).size();
+        if(this->_node_to_id_.find(vertex) != this->_node_to_id_.end())
+            return this->_ADJACENCY_LIST_.at(this->_node_to_id_.at(vertex)).size();
         else
             return -1;
     }
