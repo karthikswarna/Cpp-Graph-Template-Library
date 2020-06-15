@@ -57,7 +57,7 @@ namespace Graph
         
         private:
             // Utility Function used for topoligical sort.
-            void DFSUtil(unsigned int, std::unordered_set<unsigned int> &, std::vector<unsigned int> &) const;
+            unsigned int DFSUtil(unsigned int, unsigned int, std::unordered_set<unsigned int> &, std::vector<T> &) const;
             // Utility function for finding cycles in directed graph.
             bool isCyclic(unsigned int, std::unordered_set<unsigned int> &, std::unordered_set<unsigned int> &, std::unordered_set<unsigned int> &) const;
             

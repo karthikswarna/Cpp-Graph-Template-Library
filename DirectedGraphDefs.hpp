@@ -233,35 +233,27 @@ namespace Graph
             return std::vector<T>{};
 
         std::unordered_set<unsigned int> Visited;
-        unsigned int index = this->_ADJACENCY_LIST_.size();
-        std::vector<T> TopSort(index);
+        unsigned int index = this->_ADJACENCY_LIST_.size() - 1;
+        std::vector<T> TopSort(index + 1);
 
         for(const std::pair<unsigned int, std::vector<unsigned int>> &edges : this->_ADJACENCY_LIST_)
-        {
             if(Visited.find(edges.first) == Visited.end())
-            {
-                std::vector<unsigned int> VisitedNodes;
-                DFSUtil(edges.first, Visited, VisitedNodes);
-
-                for(unsigned int v : VisitedNodes)
-                    TopSort[--index] = this->_id_to_node_.at(v);
-            }
-        }
+                index = DFSUtil(index, edges.first, Visited, TopSort);
 
         return TopSort;
     }
 
     template<typename T>
-    void DirectedGraph<T>::DFSUtil(unsigned int start, std::unordered_set<unsigned int> &Visited, std::vector<unsigned int> &VisitedNodes) const
+    unsigned int DirectedGraph<T>::DFSUtil(unsigned int index, unsigned int start, std::unordered_set<unsigned int> &Visited, std::vector<T> &TopSort) const
     {
         Visited.insert(start);
-        for(unsigned int dest : this->_ADJACENCY_LIST_.at(start))
-        {
-            if(Visited.find(dest) == Visited.end())
-                DFSUtil(dest, Visited, VisitedNodes);
-        }
 
-        VisitedNodes.push_back(start);
+        for(unsigned int dest : this->_ADJACENCY_LIST_.at(start))
+            if(Visited.find(dest) == Visited.end())
+                index = DFSUtil(index, dest, Visited, TopSort);
+
+        TopSort[index] = this->_id_to_node_.at(start);
+        return index - 1;
     }
     
     template<typename T>
