@@ -1,14 +1,12 @@
 #ifndef DIRECTED_GRAPH_H
 #define DIRECTED_GRAPH_H
 
-#include <vector>
-#include <unordered_map>
-#include "SimpleGraph.hpp"
+#include "UndirectedGraph.hpp"
 
 namespace Graph
 {
     template<typename T>
-    class DirectedGraph : public SimpleGraph<T>
+    class DirectedGraph : public UndirectedGraph<T>
     {
         public:
             /*

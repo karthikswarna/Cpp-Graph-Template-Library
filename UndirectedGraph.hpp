@@ -1,5 +1,5 @@
-#ifndef SIMPLE_GRAPH_H
-#define SIMPLE_GRAPH_H
+#ifndef UNDIRECTED_GRAPH_H
+#define UNDIRECTED_GRAPH_H
 
 #include <queue>
 #include <vector>
@@ -11,7 +11,7 @@
 namespace Graph
 {
     template<typename T>
-    class SimpleGraph
+    class UndirectedGraph
     {
         protected:
             std::unordered_map<unsigned int, std::vector<unsigned int>> _ADJACENCY_LIST_;
@@ -23,25 +23,33 @@ namespace Graph
             /*
              * SPECIAL MEMBER FUNCTIONS
              */
-            // Default constructor
-            SimpleGraph() noexcept;
-            // Destructor
-            ~SimpleGraph() noexcept;
+            // Default constructor.
+            UndirectedGraph() noexcept;
+            // Destructor.
+            ~UndirectedGraph() noexcept;
             
-            //Copy Constructor
-            SimpleGraph(const SimpleGraph &) noexcept;
-            // Copy assignment operator
-            SimpleGraph& operator=(const SimpleGraph &) noexcept;
+            //Copy Constructor.
+            UndirectedGraph(const UndirectedGraph &) noexcept;
+            // Copy assignment operator.
+            UndirectedGraph& operator=(const UndirectedGraph &) noexcept;
             
-            // Move constructor
-            SimpleGraph(SimpleGraph &&) noexcept;
-            // Move assignment operator
-            SimpleGraph& operator=(SimpleGraph &&) noexcept;
+            // Move constructor.
+            UndirectedGraph(UndirectedGraph &&) noexcept;
+            // Move assignment operator.
+            UndirectedGraph& operator=(UndirectedGraph &&) noexcept;
+
+            // Overloaded equality operator.************
+            bool operator==(const UndirectedGraph &) const;
+            // Overloaded inequality operator.*************
+            bool operator!=(const UndirectedGraph &) const;
 
 
             /*
              * NON-CONST MEMBER FUNCTIONS
              */
+            // Swaps the internal data structures of the given graphs.****************
+            void swap(UndirectedGraph &);
+
             // Given an object, adds it to the graph, if it doesn't exist already.
             bool addVertex(T);
             // Given a list of objects, adds each of them to the graph, if it doesn't exist already.
@@ -77,9 +85,28 @@ namespace Graph
             void printGraph() const;
             // Returns the degree of a vertex, if it exists. If the vertex doesn't exist, returns -1.
             int getDegree(T) const;
+            // Returns true if the graph is empty, else false.**************** 
+            bool empty() const;
+
+            /*
+             * ITERATOR-RELATED FUNCTIONS
+             */
+            class node_iterator;
+            class const_node_iterator;
+            class edge_iterator;
+            class const_edge_iterator;
+
+            node_iterator begin();
+            const_node_iterator begin() const;
+            const_node_iterator cbegin() const;
+            node_iterator end();
+            const_node_iterator end() const;
+            const_node_iterator cend() const;
     };
 }
 
-#include "SimpleGraphDefs.hpp"
+#include "UndirectedGraphDefs.hpp"
+#include "const_node_iterator.hpp"
+#include "node_iterator.hpp"
 
 #endif

@@ -12,13 +12,13 @@ namespace Graph
 
     template<typename T>
     DirectedGraph<T>::DirectedGraph(const DirectedGraph &rhs) noexcept
-        : Graph::SimpleGraph<T>(rhs)
+        : Graph::UndirectedGraph<T>(rhs)
     {
     }
 
     template<typename T>
     DirectedGraph<T>::DirectedGraph(DirectedGraph &&rhs) noexcept
-        : Graph::SimpleGraph<T>(rhs)
+        : Graph::UndirectedGraph<T>(rhs)
     {
     }
 

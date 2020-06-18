@@ -1,17 +1,53 @@
-#ifndef SIMPLE_GRAPH_DEFINITIONS_H
-#define SIMPLE_GRAPH_DEFINITIONS_H
+#ifndef UNDIRECTED_GRAPH_DEFINITIONS_H
+#define UNDIRECTED_GRAPH_DEFINITIONS_H
 
-#include "SimpleGraph.hpp"
+#include "UndirectedGraph.hpp"
 
 namespace Graph
 {
     template<typename T>
-    SimpleGraph<T>::SimpleGraph() noexcept
+    typename UndirectedGraph<T>::node_iterator UndirectedGraph<T>::begin()
+    {
+        return node_iterator(this->_ADJACENCY_LIST_.begin(), this->_id_to_node_);
+    }
+
+    template<typename T>
+    typename UndirectedGraph<T>::node_iterator UndirectedGraph<T>::end()
+    {
+        return node_iterator(this->_ADJACENCY_LIST_.end(), this->_id_to_node_);
+    }
+
+    template<typename T>
+    typename UndirectedGraph<T>::const_node_iterator UndirectedGraph<T>::begin() const
+    {
+        return const_node_iterator(this->_ADJACENCY_LIST_.begin(), this->_id_to_node_);
+    }
+
+    template<typename T>
+    typename UndirectedGraph<T>::const_node_iterator UndirectedGraph<T>::cbegin() const
+    {
+        return const_node_iterator(this->_ADJACENCY_LIST_.cbegin(), this->_id_to_node_);
+    }
+
+    template<typename T>
+    typename UndirectedGraph<T>::const_node_iterator UndirectedGraph<T>::end() const
+    {
+        return const_node_iterator(this->_ADJACENCY_LIST_.end(), this->_id_to_node_);
+    }
+
+    template<typename T>
+    typename UndirectedGraph<T>::const_node_iterator UndirectedGraph<T>::cend() const
+    {
+        return const_node_iterator(this->_ADJACENCY_LIST_.cend(), this->_id_to_node_);
+    }
+    
+    template<typename T>
+    UndirectedGraph<T>::UndirectedGraph() noexcept
     {
     }
 
     template<typename T>
-    SimpleGraph<T>::SimpleGraph(const SimpleGraph &rhs) noexcept
+    UndirectedGraph<T>::UndirectedGraph(const UndirectedGraph &rhs) noexcept
         : _ADJACENCY_LIST_ ( rhs._ADJACENCY_LIST_ )
         , _id_to_node_ ( rhs._id_to_node_ )
         , _node_to_id_ (rhs._node_to_id_)
@@ -20,7 +56,7 @@ namespace Graph
     }
 
     template<typename T>
-    SimpleGraph<T>::SimpleGraph(SimpleGraph &&rhs) noexcept
+    UndirectedGraph<T>::UndirectedGraph(UndirectedGraph &&rhs) noexcept
         : _ADJACENCY_LIST_ ( std::move(rhs._ADJACENCY_LIST_) )
         , _id_to_node_ ( std::move(rhs._id_to_node_) )
         , _node_to_id_ ( std::move(rhs._node_to_id_) )
@@ -29,7 +65,7 @@ namespace Graph
     }
 
     template<typename T>
-    SimpleGraph<T>& SimpleGraph<T>::operator=(const SimpleGraph &rhs) noexcept
+    UndirectedGraph<T>& UndirectedGraph<T>::operator=(const UndirectedGraph &rhs) noexcept
     {
         this->_ADJACENCY_LIST_ = rhs._ADJACENCY_LIST_;
         this->_id_to_node_ = rhs._id_to_node_;
@@ -39,7 +75,7 @@ namespace Graph
     }
 
     template<typename T>
-    SimpleGraph<T>& SimpleGraph<T>::operator=(SimpleGraph &&rhs) noexcept
+    UndirectedGraph<T>& UndirectedGraph<T>::operator=(UndirectedGraph &&rhs) noexcept
     {
         this->_ADJACENCY_LIST_ = std::move(rhs._ADJACENCY_LIST_);
         this->_id_to_node_ = std::move(rhs._id_to_node_);
@@ -49,7 +85,7 @@ namespace Graph
     }
 
     template<typename T>
-    SimpleGraph<T>::~SimpleGraph() noexcept 
+    UndirectedGraph<T>::~UndirectedGraph() noexcept 
     { 
         this->_ADJACENCY_LIST_.clear();
         this->_id_to_node_.clear();
@@ -57,7 +93,7 @@ namespace Graph
     }
 
     template<typename T>
-    bool SimpleGraph<T>::addVertex(T vertex)
+    bool UndirectedGraph<T>::addVertex(T vertex)
     {
         try
         {
@@ -78,7 +114,7 @@ namespace Graph
     }
 
     template<typename T>
-    bool SimpleGraph<T>::addVertices(const std::vector<T> &vertices)
+    bool UndirectedGraph<T>::addVertices(const std::vector<T> &vertices)
     {
         try
         {
@@ -102,7 +138,7 @@ namespace Graph
     }
 
     template<typename T>
-    bool SimpleGraph<T>::addEdge(T vertex1, T vertex2)
+    bool UndirectedGraph<T>::addEdge(T vertex1, T vertex2)
     {
         try
         {
@@ -145,7 +181,7 @@ namespace Graph
     }
 
     template<typename T>
-    bool SimpleGraph<T>::addEdges(const std::vector<std::pair<T, T>> &edges)
+    bool UndirectedGraph<T>::addEdges(const std::vector<std::pair<T, T>> &edges)
     {
         try
         {
@@ -194,7 +230,7 @@ namespace Graph
     }
 
     template<typename T>
-    bool SimpleGraph<T>::removeVertex(T vertex)
+    bool UndirectedGraph<T>::removeVertex(T vertex)
     {
         try
         {
@@ -225,7 +261,7 @@ namespace Graph
     }
 
     template<typename T>
-    bool SimpleGraph<T>::removeVertices(const std::vector<T> &vertices)
+    bool UndirectedGraph<T>::removeVertices(const std::vector<T> &vertices)
     {
         try
         {
@@ -259,7 +295,7 @@ namespace Graph
     }
 
     template<typename T>
-    bool SimpleGraph<T>::removeEdge(T vertex1, T vertex2)
+    bool UndirectedGraph<T>::removeEdge(T vertex1, T vertex2)
     {
         try
         {
@@ -291,7 +327,7 @@ namespace Graph
     }
 
     template<typename T>
-    bool SimpleGraph<T>::removeEdges(const std::vector<std::pair<T, T>> &edges)
+    bool UndirectedGraph<T>::removeEdges(const std::vector<std::pair<T, T>> &edges)
     {
         try
         {
@@ -329,7 +365,7 @@ namespace Graph
     }
 
     template<typename T>
-    void SimpleGraph<T>::printDFS(unsigned int start, std::unordered_set<unsigned int> &Visited) const
+    void UndirectedGraph<T>::printDFS(unsigned int start, std::unordered_set<unsigned int> &Visited) const
     {
         Visited.insert(start);
         std::cout << this->_id_to_node_.at(start);
@@ -346,7 +382,7 @@ namespace Graph
     }
 
     template<typename T>
-    void SimpleGraph<T>::printDFS() const
+    void UndirectedGraph<T>::printDFS() const
     {
         std::cout << "DEPTH FIRST SEARCH\n";
 
@@ -362,7 +398,7 @@ namespace Graph
     }
 
     template<typename T>
-    void SimpleGraph<T>::printBFS(unsigned int start, std::unordered_set<unsigned int> &Visited) const
+    void UndirectedGraph<T>::printBFS(unsigned int start, std::unordered_set<unsigned int> &Visited) const
     {
         std::queue<unsigned int> Q;
         std::vector<unsigned int> path;
@@ -397,7 +433,7 @@ namespace Graph
     }
 
     template<typename T>
-    void SimpleGraph<T>::printBFS() const
+    void UndirectedGraph<T>::printBFS() const
     {
         std::cout << "BREADTH FIRST SEARCH" << '\n';
 
@@ -413,7 +449,7 @@ namespace Graph
     }
 
     template<typename T>
-    void SimpleGraph<T>::printGraph() const
+    void UndirectedGraph<T>::printGraph() const
     {
         std::cout << "ADJACENCY LIST" << '\n';
         for(const std::pair<unsigned int, std::vector<unsigned int>> &e : this->_ADJACENCY_LIST_)
@@ -430,7 +466,7 @@ namespace Graph
     }
 
     template<typename T>
-    int SimpleGraph<T>::getDegree(T vertex) const
+    int UndirectedGraph<T>::getDegree(T vertex) const
     {
         if(this->_node_to_id_.find(vertex) != this->_node_to_id_.end())
             return this->_ADJACENCY_LIST_.at(this->_node_to_id_.at(vertex)).size();
