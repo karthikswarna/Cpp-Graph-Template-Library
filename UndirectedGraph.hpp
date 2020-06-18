@@ -38,16 +38,16 @@ namespace Graph
             // Move assignment operator.
             UndirectedGraph& operator=(UndirectedGraph &&) noexcept;
 
-            // Overloaded equality operator.************
+            // Overloaded equality operator.
             bool operator==(const UndirectedGraph &) const;
-            // Overloaded inequality operator.*************
+            // Overloaded inequality operator.
             bool operator!=(const UndirectedGraph &) const;
 
 
             /*
              * NON-CONST MEMBER FUNCTIONS
              */
-            // Swaps the internal data structures of the given graphs.****************
+            // Swaps the internal data structures of the given graphs.
             void swap(UndirectedGraph &);
 
             // Given an object, adds it to the graph, if it doesn't exist already.
@@ -85,7 +85,7 @@ namespace Graph
             void printGraph() const;
             // Returns the degree of a vertex, if it exists. If the vertex doesn't exist, returns -1.
             int getDegree(T) const;
-            // Returns true if the graph is empty, else false.**************** 
+            // Returns true if the graph is empty, else false. 
             bool empty() const;
 
             /*

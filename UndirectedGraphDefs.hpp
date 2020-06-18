@@ -47,20 +47,19 @@ namespace Graph
     }
 
     template<typename T>
+    UndirectedGraph<T>::~UndirectedGraph() noexcept 
+    { 
+        this->_ADJACENCY_LIST_.clear();
+        this->_id_to_node_.clear();
+        this->_node_to_id_.clear();
+    }
+
+    template<typename T>
     UndirectedGraph<T>::UndirectedGraph(const UndirectedGraph &rhs) noexcept
         : _ADJACENCY_LIST_ ( rhs._ADJACENCY_LIST_ )
         , _id_to_node_ ( rhs._id_to_node_ )
         , _node_to_id_ (rhs._node_to_id_)
         , _id_ ( rhs._id_ )
-    {
-    }
-
-    template<typename T>
-    UndirectedGraph<T>::UndirectedGraph(UndirectedGraph &&rhs) noexcept
-        : _ADJACENCY_LIST_ ( std::move(rhs._ADJACENCY_LIST_) )
-        , _id_to_node_ ( std::move(rhs._id_to_node_) )
-        , _node_to_id_ ( std::move(rhs._node_to_id_) )
-        , _id_ ( std::move(rhs._id_) )
     {
     }
 
@@ -75,6 +74,15 @@ namespace Graph
     }
 
     template<typename T>
+    UndirectedGraph<T>::UndirectedGraph(UndirectedGraph &&rhs) noexcept
+        : _ADJACENCY_LIST_ ( std::move(rhs._ADJACENCY_LIST_) )
+        , _id_to_node_ ( std::move(rhs._id_to_node_) )
+        , _node_to_id_ ( std::move(rhs._node_to_id_) )
+        , _id_ ( std::move(rhs._id_) )
+    {
+    }
+
+    template<typename T>
     UndirectedGraph<T>& UndirectedGraph<T>::operator=(UndirectedGraph &&rhs) noexcept
     {
         this->_ADJACENCY_LIST_ = std::move(rhs._ADJACENCY_LIST_);
@@ -85,11 +93,28 @@ namespace Graph
     }
 
     template<typename T>
-    UndirectedGraph<T>::~UndirectedGraph() noexcept 
-    { 
-        this->_ADJACENCY_LIST_.clear();
-        this->_id_to_node_.clear();
-        this->_node_to_id_.clear();
+    bool UndirectedGraph<T>::operator==(const UndirectedGraph &rhs) const
+    {
+        return this->_ADJACENCY_LIST_ == rhs._ADJACENCY_LIST_
+            && this->_id_to_node_ == rhs._id_to_node_
+            && this->_node_to_id_ == rhs._node_to_id_;
+    }
+
+    template<typename T>
+    bool UndirectedGraph<T>::operator!=(const UndirectedGraph &rhs) const
+    {
+        return this->_ADJACENCY_LIST_ != rhs._ADJACENCY_LIST_
+            || this->_id_to_node_ != rhs._id_to_node_
+            || this->_node_to_id_ != rhs._node_to_id_;
+    }
+
+    template<typename T>
+    void UndirectedGraph<T>::swap(UndirectedGraph &rhs)
+    {
+        this->_ADJACENCY_LIST_.swap(rhs._ADJACENCY_LIST_);
+        this->_id_to_node_.swap(rhs._id_to_node_);
+        this->_node_to_id_.swap(rhs._node_to_id_);
+        std::swap(this->_id_, rhs._id_);
     }
 
     template<typename T>
@@ -472,6 +497,12 @@ namespace Graph
             return this->_ADJACENCY_LIST_.at(this->_node_to_id_.at(vertex)).size();
         else
             return -1;
+    }
+
+    template<typename T>
+    bool UndirectedGraph<T>::empty() const
+    {
+        return this->_id_to_node_.empty();
     }
 }
 
