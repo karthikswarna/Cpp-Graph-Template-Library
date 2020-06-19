@@ -3,8 +3,6 @@
 
 #include "UndirectedGraph.hpp"
 
-// size functioanlity can be done
-
 namespace Graph
 {
     template<typename T>
@@ -91,12 +89,12 @@ namespace Graph
     typename UndirectedGraph<T>::node_iterator& UndirectedGraph<T>::node_iterator::operator=(node_iterator &&rhs) noexcept
     {
         _it_ = std::move(rhs._it_);
-        _id_to_node_ptr_ = std::move(rhs._id_to_node_ptr_);
+        _id_to_node_ptr_ = rhs._id_to_node_ptr_;
         return *this;
     }
 
-    template<typename T>
     // Private constructor. Only move version is sufficienct.
+    template<typename T>
     UndirectedGraph<T>::node_iterator::node_iterator(const std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator &rhs, std::unordered_map<unsigned int, T> &_id_to_node_)
         : _it_ ( std::move(rhs) )
         , _id_to_node_ptr_ ( _id_to_node_ )
@@ -108,6 +106,7 @@ namespace Graph
     {
         return _it_ == rhs._it_;
     }
+
     template<typename T>
     bool UndirectedGraph<T>::node_iterator::operator!=(const node_iterator &rhs) const
     {
@@ -117,7 +116,7 @@ namespace Graph
     template<typename T>
     typename UndirectedGraph<T>::node_iterator& UndirectedGraph<T>::node_iterator::operator++()
     {
-        _it_++;
+        ++_it_;
         return *this;
     }
 
@@ -125,7 +124,7 @@ namespace Graph
     typename UndirectedGraph<T>::node_iterator UndirectedGraph<T>::node_iterator::operator++(int)
     {
         node_iterator old = *this;
-        _it_++;
+        ++_it_;
         return old;
     }
 
@@ -140,6 +139,6 @@ namespace Graph
     {
         return &(_id_to_node_ptr_.at(_it_->first));
     }
-};
+}
 
 #endif

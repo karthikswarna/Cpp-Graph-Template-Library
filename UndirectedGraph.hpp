@@ -102,11 +102,20 @@ namespace Graph
             node_iterator end();
             const_node_iterator end() const;
             const_node_iterator cend() const;
+
+            edge_iterator begin(int);
+            const_edge_iterator begin(int) const;
+            const_edge_iterator cbegin(int) const;
+            edge_iterator end(int);
+            const_edge_iterator end(int) const;
+            const_edge_iterator cend(int) const;
     };
 }
 
 #include "UndirectedGraphDefs.hpp"
 #include "const_node_iterator.hpp"
+#include "const_edge_iterator.hpp"
 #include "node_iterator.hpp"
+#include "edge_iterator.hpp"
 
 #endif

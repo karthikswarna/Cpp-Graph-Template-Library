@@ -42,6 +42,68 @@ namespace Graph
     }
     
     template<typename T>
+    typename UndirectedGraph<T>::edge_iterator UndirectedGraph<T>::begin(int)
+    {
+        std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator it = this->_ADJACENCY_LIST_.begin();
+        if(this->empty())
+            return edge_iterator(it, it, this->_id_to_node_);
+
+        std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator first_it = it;    // This has the first non-empty mapping.
+        std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator last_it = it;     // This has the last non-empty mapping.
+        bool flag = false;
+
+        // Finding first_it and last_it.    
+        while(it != this->_ADJACENCY_LIST_.end())
+        {
+            if(!(it->second.empty()))
+            {
+                if(flag == false)
+                {
+                    first_it = it;
+                    flag = true;
+                }
+
+                last_it = it;
+            }
+
+            ++it;
+        }
+
+        return edge_iterator(first_it, last_it, this->_id_to_node_, first_it->second.begin());
+    }
+
+    template<typename T>
+    typename UndirectedGraph<T>::edge_iterator UndirectedGraph<T>::end(int)
+    {
+        std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator it = this->_ADJACENCY_LIST_.begin();
+        if(this->empty())
+            return edge_iterator(it, it, this->_id_to_node_);
+
+        std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator first_it = it;
+        std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator last_it = it;
+        bool flag = false;
+
+        while(it != this->_ADJACENCY_LIST_.end())
+        {
+            if(!(it->second.empty()))
+            {
+                if(flag == false)
+                {
+                    first_it = it;
+                    flag = true;
+                }
+
+                last_it = it;
+            }
+
+            ++it;
+        }
+
+        return edge_iterator(last_it, last_it, this->_id_to_node_, last_it->second.end());
+    }
+
+
+    template<typename T>
     UndirectedGraph<T>::UndirectedGraph() noexcept
     {
     }

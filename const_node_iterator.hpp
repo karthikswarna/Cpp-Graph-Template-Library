@@ -3,8 +3,6 @@
 
 #include "node_iterator.hpp"
 
-// size functioanlity can be done
-
 namespace Graph
 {
     template<typename T>
@@ -92,7 +90,7 @@ namespace Graph
     template<typename T>
     UndirectedGraph<T>::const_node_iterator::const_node_iterator(const_node_iterator &&rhs) noexcept
         : _it_ ( std::move(rhs._it_) )
-        , _id_to_node_ptr_ ( std::move(rhs._id_to_node_ptr_) )
+        , _id_to_node_ptr_ ( rhs._id_to_node_ptr_ )
     {
     }
 
@@ -100,7 +98,7 @@ namespace Graph
     typename UndirectedGraph<T>::const_node_iterator& UndirectedGraph<T>::const_node_iterator::operator=(const_node_iterator &&rhs) noexcept
     {
         _it_ = std::move(rhs._it_);
-        _id_to_node_ptr_ = std::move(rhs._id_to_node_ptr_);
+        _id_to_node_ptr_ = rhs._id_to_node_ptr_;
         return *this;
     }
 
@@ -114,12 +112,12 @@ namespace Graph
     template<typename T>
     UndirectedGraph<T>::const_node_iterator::const_node_iterator(typename UndirectedGraph<T>::node_iterator &&rhs) noexcept
         : _it_ ( std::move(rhs._it_) )
-        , _id_to_node_ptr_ ( std::move(rhs._id_to_node_ptr_) )
+        , _id_to_node_ptr_ ( rhs._id_to_node_ptr_ )
     {
     }
 
-    template<typename T>
     // Private constructor. Only move version is sufficienct.
+    template<typename T>
     UndirectedGraph<T>::const_node_iterator::const_node_iterator(const std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator &rhs, const std::unordered_map<unsigned int, T> &_id_to_node_)
         : _it_ ( std::move(rhs) )
         , _id_to_node_ptr_ ( _id_to_node_ )
@@ -141,7 +139,7 @@ namespace Graph
     template<typename T>
     typename UndirectedGraph<T>::const_node_iterator& UndirectedGraph<T>::const_node_iterator::operator++()
     {
-        _it_++;
+        ++_it_;
         return *this;
     }
 
@@ -149,7 +147,7 @@ namespace Graph
     typename UndirectedGraph<T>::const_node_iterator UndirectedGraph<T>::const_node_iterator::operator++(int)
     {
         const_node_iterator old = *this;
-        _it_++;
+        ++_it_;
         return old;
     }
 
