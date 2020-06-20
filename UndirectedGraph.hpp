@@ -97,16 +97,16 @@ namespace Graph
             class const_edge_iterator;
 
             node_iterator begin();
+            node_iterator end();
             const_node_iterator begin() const;
             const_node_iterator cbegin() const;
-            node_iterator end();
             const_node_iterator end() const;
             const_node_iterator cend() const;
 
             edge_iterator begin(int);
+            edge_iterator end(int);
             const_edge_iterator begin(int) const;
             const_edge_iterator cbegin(int) const;
-            edge_iterator end(int);
             const_edge_iterator end(int) const;
             const_edge_iterator cend(int) const;
     };

@@ -11,15 +11,15 @@ namespace Graph
         friend class UndirectedGraph<T>;
 
         private:
-            std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator _it_;
-            std::vector<unsigned int>::iterator _it2_;
+            std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator _it_;
+            std::vector<unsigned int>::const_iterator _it2_;
             const std::unordered_map<unsigned int, T> &_id_to_node_ptr_;
-            const std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator _last_it_;
+            const std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator _last_it_;
 
-            const_edge_iterator(const std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator &,    // Gives iterator to the adjacency list(current iterator).
-                                const std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator &,    // Gives iterator to the last non-empty mapping in the container(used in bound checking, this is constant for a Graph if not new edges are added).
+            const_edge_iterator(const std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator &,    // Gives iterator to the adjacency list(current iterator).
+                                const std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator &,    // Gives iterator to the last non-empty mapping in the container(used in bound checking, this is constant for a Graph if not new edges are added).
                                 const std::unordered_map<unsigned int, T> &,                                            // Reference to the _id_to_node_ in the Graph.
-                                const std::vector<unsigned int>::iterator & = V.begin());                         // Gives iterator to the vector in the current mapping.
+                                const std::vector<unsigned int>::const_iterator & = V.begin());                         // Gives iterator to the vector in the current mapping.
 
         public:
             /*
@@ -136,7 +136,7 @@ namespace Graph
 
     // Private constructor. Only move version is sufficienct.
     template<typename T>
-    UndirectedGraph<T>::const_edge_iterator::const_edge_iterator(const std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator &rhs, const std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator &rhs3, const std::unordered_map<unsigned int, T> &_id_to_node_, const std::vector<unsigned int>::iterator &rhs2)
+    UndirectedGraph<T>::const_edge_iterator::const_edge_iterator(const std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator &rhs, const std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator &rhs3, const std::unordered_map<unsigned int, T> &_id_to_node_, const std::vector<unsigned int>::const_iterator &rhs2)
         : _it_ ( std::move(rhs) )
         , _it2_ ( std::move(rhs2) )
         , _last_it_ ( std::move(rhs3) )
@@ -197,13 +197,13 @@ namespace Graph
     template<typename T>
     const std::pair<const T&, const T&> UndirectedGraph<T>::const_edge_iterator::operator*() const
     {
-        return std::pair<T&, T&>( _id_to_node_ptr_.at(_it_->first), _id_to_node_ptr_.at(*_it2_) );
+        return std::make_pair( _id_to_node_ptr_.at(_it_->first), _id_to_node_ptr_.at(*_it2_) );
     }
 
     template<typename T>
     const std::pair<const T*, const T*> UndirectedGraph<T>::const_edge_iterator::operator->() const
     {
-        return std::pair<T&, T&>( &(_id_to_node_ptr_.at(_it_->first)), &(_id_to_node_ptr_.at(*_it2_)) );
+        return std::make_pair( &(_id_to_node_ptr_.at(_it_->first)), &(_id_to_node_ptr_.at(*_it2_)) );
     }
 }
 
