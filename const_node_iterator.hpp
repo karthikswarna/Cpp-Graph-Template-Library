@@ -13,6 +13,7 @@ namespace Graph
         private:
             std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator _it_;
             const std::unordered_map<unsigned int, T> &_id_to_node_ptr_;
+
             const_node_iterator(const std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator &, const std::unordered_map<unsigned int, T> &);
 
         public:

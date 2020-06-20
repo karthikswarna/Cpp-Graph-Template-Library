@@ -17,8 +17,8 @@ namespace Graph
             std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator _it_;
             std::vector<unsigned int>::iterator _it2_;
             std::unordered_map<unsigned int, T> &_id_to_node_ptr_;
-
             const std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator _last_it_;
+
             edge_iterator(const std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator &,    // Gives iterator to the adjacency list(current iterator).
                           const std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator &,    // Gives iterator to the last non-empty mapping in the container(used in bound checking, this is constant for a Graph if not new edges are added).
                           std::unordered_map<unsigned int, T> &,                                            // Reference to the _id_to_node_ in the Graph.
