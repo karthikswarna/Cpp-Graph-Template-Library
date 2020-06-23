@@ -10,11 +10,30 @@
 
 namespace Graph
 {
+    template<typename... X>
+    class UndirectedGraph;
+
     template<typename T>
-    class UndirectedGraph
-    {
+    class UndirectedGraph<T>
+    {   
         protected:
-            std::unordered_map<unsigned int, std::vector<unsigned int>> _ADJACENCY_LIST_;
+            class Node
+            {
+                public:
+                    unsigned int vertex;
+
+                    bool operator==(const unsigned int v) const
+                    {
+                        return vertex == v;
+                    }
+
+                    bool operator==(const Node &N) const
+                    {
+                        return vertex == N.vertex;
+                    }
+            };
+
+            std::unordered_map<unsigned int, std::vector<Node>> _ADJACENCY_LIST_;
             std::unordered_map<unsigned int, T> _id_to_node_;
             std::unordered_map<T, unsigned int> _node_to_id_;
             unsigned int _id_{0};
@@ -109,6 +128,33 @@ namespace Graph
             const_edge_iterator cbegin(int) const;
             const_edge_iterator end(int) const;
             const_edge_iterator cend(int) const;
+    };
+
+    template<typename T, typename W>
+    class UndirectedGraph<T, W> : public UndirectedGraph<T>
+    {
+        static_assert(std::is_arithmetic<W>::value, "\"Weight type must be numeric\"");
+
+        private:
+            class Node
+            {
+                public:
+                    unsigned int vertex;
+                    W weight;
+
+                    bool operator==(const unsigned int v) const
+                    {
+                        return vertex == v;
+                    }
+
+                    bool operator==(const Node &N) const
+                    {
+                        return vertex == N.vertex;
+                    }
+            };
+
+            std::unordered_map<unsigned int, std::vector<std::pair<unsigned int, W>>> _ADJACENCY_LIST_;
+
     };
 }
 

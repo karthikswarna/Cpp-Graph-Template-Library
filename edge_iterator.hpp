@@ -3,9 +3,6 @@
 
 #include "UndirectedGraph.hpp"
 
-// Dummy variable used to initialize the default value of optional argument in private constructor.
-std::vector<unsigned int> V{1};
-
 namespace Graph
 {    
     template<typename T>
@@ -14,15 +11,15 @@ namespace Graph
         friend class UndirectedGraph<T>;
 
         private:
-            std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator _it_;
-            std::vector<unsigned int>::iterator _it2_;
+            typename std::unordered_map<unsigned int, std::vector<Node>>::iterator _it_;
+            typename std::vector<Node>::iterator _it2_;
             std::unordered_map<unsigned int, T> &_id_to_node_ptr_;
-            const std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator _last_it_;
+            const typename std::unordered_map<unsigned int, std::vector<Node>>::iterator _last_it_;
 
-            edge_iterator(const std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator &,    // Gives iterator to the adjacency list(current iterator).
-                          const std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator &,    // Gives iterator to the last non-empty mapping in the container(used in bound checking, this is constant for a Graph if not new edges are added).
+            edge_iterator(const typename std::unordered_map<unsigned int, std::vector<Node>>::iterator &,   // Gives iterator to the adjacency list(current iterator).
+                          const typename std::unordered_map<unsigned int, std::vector<Node>>::iterator &,   // Gives iterator to the last non-empty mapping in the container(used in bound checking, this is constant for a Graph if not new edges are added).
                           std::unordered_map<unsigned int, T> &,                                            // Reference to the _id_to_node_ in the Graph.
-                          const std::vector<unsigned int>::iterator & = V.begin());                         // Gives iterator to the vector in the current mapping.
+                          const typename std::vector<Node>::iterator & = (std::vector<Node>{}).begin());                        // Gives iterator to the vector in the current mapping.
 
         public:
             /*
@@ -113,7 +110,7 @@ namespace Graph
 
     // Private constructor. Only move version is sufficienct.
     template<typename T>
-    UndirectedGraph<T>::edge_iterator::edge_iterator(const std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator &rhs, const std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator &rhs3, std::unordered_map<unsigned int, T> &_id_to_node_, const std::vector<unsigned int>::iterator &rhs2)
+    UndirectedGraph<T>::edge_iterator::edge_iterator(const typename std::unordered_map<unsigned int, std::vector<Node>>::iterator &rhs, const typename std::unordered_map<unsigned int, std::vector<Node>>::iterator &rhs3, std::unordered_map<unsigned int, T> &_id_to_node_, const typename std::vector<Node>::iterator &rhs2)
         : _it_ ( std::move(rhs) )
         , _it2_ ( std::move(rhs2) )
         , _last_it_ ( std::move(rhs3) )
@@ -174,13 +171,13 @@ namespace Graph
     template<typename T>
     std::pair<T&, T&> UndirectedGraph<T>::edge_iterator::operator*() const
     {
-        return std::pair<T&, T&>( _id_to_node_ptr_.at(_it_->first), _id_to_node_ptr_.at(*_it2_) );
+        return std::pair<T&, T&>( _id_to_node_ptr_.at(_it_->first), _id_to_node_ptr_.at(_it2_->vertex) );
     }
 
     template<typename T>
     std::pair<T*, T*> UndirectedGraph<T>::edge_iterator::operator->() const
     {
-        return std::pair<T&, T&>( &(_id_to_node_ptr_.at(_it_->first)), &(_id_to_node_ptr_.at(*_it2_)) );
+        return std::pair<T&, T&>( &(_id_to_node_ptr_.at(_it_->first)), &(_id_to_node_ptr_.at(_it2_->vertex)) );
     }
 }
 

@@ -5,6 +5,8 @@
 
 namespace Graph
 {
+    #define Node typename UndirectedGraph<T>::Node
+
     template<typename T>
     DirectedGraph<T>::DirectedGraph() noexcept
     {
@@ -60,7 +62,7 @@ namespace Graph
             {
                 this->_id_to_node_.insert(std::make_pair(this->_id_, vertex1));
                 this->_node_to_id_.insert(std::make_pair(vertex1, this->_id_));
-                this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<unsigned int>{}));
+                this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<Node>{}));
                 (this->_id_)++;
             }
 
@@ -69,16 +71,16 @@ namespace Graph
             {
                 this->_id_to_node_.insert(std::make_pair(this->_id_, vertex2));
                 this->_node_to_id_.insert(std::make_pair(vertex2, this->_id_));
-                this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<unsigned int>{}));
+                this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<Node>{}));
                 (this->_id_)++;
             }
 
-            int id1 = this->_node_to_id_.at(vertex1);
-            int id2 = this->_node_to_id_.at(vertex2);
+            unsigned int id1 = this->_node_to_id_.at(vertex1);
+            unsigned int id2 = this->_node_to_id_.at(vertex2);
 
-            std::vector<unsigned int> edge_list = this->_ADJACENCY_LIST_.at(id1);
+            std::vector<Node> edge_list = this->_ADJACENCY_LIST_.at(id1);
             if(std::find(edge_list.begin(), edge_list.end(), id2) == edge_list.end())
-                this->_ADJACENCY_LIST_.at(id1).push_back(id2);
+                this->_ADJACENCY_LIST_.at(id1).push_back(Node{id2});
 
             return true;
         }
@@ -104,7 +106,7 @@ namespace Graph
                 {
                     this->_id_to_node_.insert(std::make_pair(this->_id_, vertex1));
                     this->_node_to_id_.insert(std::make_pair(vertex1, this->_id_));
-                    this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<unsigned int>{}));
+                    this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<Node>{}));
                     (this->_id_)++;
                 }
 
@@ -113,16 +115,16 @@ namespace Graph
                 {
                     this->_id_to_node_.insert(std::make_pair(this->_id_, vertex2));
                     this->_node_to_id_.insert(std::make_pair(vertex2, this->_id_));
-                    this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<unsigned int>{}));
+                    this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<Node>{}));
                     (this->_id_)++;
                 }
 
-                int id1 = this->_node_to_id_.at(vertex1);
-                int id2 = this->_node_to_id_.at(vertex2);
+                unsigned int id1 = this->_node_to_id_.at(vertex1);
+                unsigned int id2 = this->_node_to_id_.at(vertex2);
 
-                std::vector<unsigned int> edge_list = this->_ADJACENCY_LIST_.at(id1);
+                std::vector<Node> edge_list = this->_ADJACENCY_LIST_.at(id1);
                 if(std::find(edge_list.begin(), edge_list.end(), id2) == edge_list.end())
-                    this->_ADJACENCY_LIST_.at(id1).push_back(id2);
+                    this->_ADJACENCY_LIST_.at(id1).push_back(Node{id2});
             }
 
             return true;
@@ -141,7 +143,7 @@ namespace Graph
         {
             if(this->_node_to_id_.find(vertex1) != this->_node_to_id_.end() && this->_node_to_id_.find(vertex2) != this->_node_to_id_.end())
             {
-                std::vector<unsigned int> &edge_list1 = this->_ADJACENCY_LIST_.at(this->_node_to_id_.at(vertex1));
+                std::vector<Node> &edge_list1 = this->_ADJACENCY_LIST_.at(this->_node_to_id_.at(vertex1));
                 if(std::find(edge_list1.begin(), edge_list1.end(), this->_node_to_id_.at(vertex2)) != edge_list1.end())
                 {
                     edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), this->_node_to_id_.at(vertex2)));
@@ -169,7 +171,7 @@ namespace Graph
     
                 if(this->_node_to_id_.find(vertex1) != this->_node_to_id_.end() && this->_node_to_id_.find(vertex2) != this->_node_to_id_.end())
                 {
-                    std::vector<unsigned int> &edge_list1 = this->_ADJACENCY_LIST_.at(this->_node_to_id_.at(vertex1));
+                    std::vector<Node> &edge_list1 = this->_ADJACENCY_LIST_.at(this->_node_to_id_.at(vertex1));
                     if(std::find(edge_list1.begin(), edge_list1.end(), this->_node_to_id_.at(vertex2)) != edge_list1.end())
                     {
                         edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), this->_node_to_id_.at(vertex2)));
@@ -193,7 +195,7 @@ namespace Graph
         std::unordered_set<unsigned int> greySet;       // Visited, but not completely processed.
         std::unordered_set<unsigned int> blackSet;      // Visited completely.
 
-        for(const std::pair<unsigned int, std::vector<unsigned int>> &i : this->_ADJACENCY_LIST_)
+        for(const std::pair<unsigned int, std::vector<Node>> &i : this->_ADJACENCY_LIST_)
             whiteSet.insert(i.first);
         
         while(whiteSet.size() > 0)
@@ -211,13 +213,13 @@ namespace Graph
         greySet.insert(start);
         whiteSet.erase(start);
 
-        for(unsigned int dest : this->_ADJACENCY_LIST_.at(start))
+        for(Node dest : this->_ADJACENCY_LIST_.at(start))
         {
-            if(blackSet.find(dest) != blackSet.end())
+            if(blackSet.find(dest.vertex) != blackSet.end())
                 continue;
-            if(greySet.find(dest) != greySet.end())
+            if(greySet.find(dest.vertex) != greySet.end())
                 return true;
-            if(whiteSet.find(dest) != whiteSet.end() && isCyclic(dest, whiteSet, greySet, blackSet))
+            if(whiteSet.find(dest.vertex) != whiteSet.end() && isCyclic(dest.vertex, whiteSet, greySet, blackSet))
                 return true;
         }
 
@@ -236,7 +238,7 @@ namespace Graph
         unsigned int index = this->_ADJACENCY_LIST_.size() - 1;
         std::vector<T> TopSort(index + 1);
 
-        for(const std::pair<unsigned int, std::vector<unsigned int>> &edges : this->_ADJACENCY_LIST_)
+        for(const std::pair<unsigned int, std::vector<Node>> &edges : this->_ADJACENCY_LIST_)
             if(Visited.find(edges.first) == Visited.end())
                 index = DFSUtil(index, edges.first, Visited, TopSort);
 
@@ -248,9 +250,9 @@ namespace Graph
     {
         Visited.insert(start);
 
-        for(unsigned int dest : this->_ADJACENCY_LIST_.at(start))
-            if(Visited.find(dest) == Visited.end())
-                index = DFSUtil(index, dest, Visited, TopSort);
+        for(Node dest : this->_ADJACENCY_LIST_.at(start))
+            if(Visited.find(dest.vertex) == Visited.end())
+                index = DFSUtil(index, dest.vertex, Visited, TopSort);
 
         TopSort[index] = this->_id_to_node_.at(start);
         return index - 1;
@@ -265,7 +267,7 @@ namespace Graph
 
             int out_degree = this->_ADJACENCY_LIST_.at(id).size();
             int in_degree = 0;
-            for(const std::pair<unsigned int, std::vector<unsigned int>> &edges : this->_ADJACENCY_LIST_)
+            for(const std::pair<unsigned int, std::vector<Node>> &edges : this->_ADJACENCY_LIST_)
             {
                 if(std::find(edges.second.begin(), edges.second.end(), id) != edges.second.end())
                     in_degree++;

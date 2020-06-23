@@ -5,6 +5,9 @@
 
 namespace Graph
 {
+    /*
+     * ITERATOR RELATED FUNCTIONS
+     */
     template<typename T>
     typename UndirectedGraph<T>::node_iterator UndirectedGraph<T>::begin()
     {
@@ -44,12 +47,12 @@ namespace Graph
     template<typename T>
     typename UndirectedGraph<T>::edge_iterator UndirectedGraph<T>::begin(int)
     {
-        std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator it = this->_ADJACENCY_LIST_.begin();
+        typename std::unordered_map<unsigned int, std::vector<Node>>::iterator it = this->_ADJACENCY_LIST_.begin();
         if(this->empty())
             return edge_iterator(it, it, this->_id_to_node_);
 
-        std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator first_it = it;    // This has the first non-empty mapping.
-        std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator last_it = it;     // This has the last non-empty mapping.
+        typename std::unordered_map<unsigned int, std::vector<Node>>::iterator first_it = it;    // This has the first non-empty mapping.
+        typename std::unordered_map<unsigned int, std::vector<Node>>::iterator last_it = it;     // This has the last non-empty mapping.
         bool flag = false;
 
         // Finding first_it and last_it.    
@@ -75,12 +78,12 @@ namespace Graph
     template<typename T>
     typename UndirectedGraph<T>::edge_iterator UndirectedGraph<T>::end(int)
     {
-        std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator it = this->_ADJACENCY_LIST_.begin();
+        typename std::unordered_map<unsigned int, std::vector<Node>>::iterator it = this->_ADJACENCY_LIST_.begin();
         if(this->empty())
             return edge_iterator(it, it, this->_id_to_node_);
 
-        std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator first_it = it;
-        std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator last_it = it;
+        typename std::unordered_map<unsigned int, std::vector<Node>>::iterator first_it = it;
+        typename std::unordered_map<unsigned int, std::vector<Node>>::iterator last_it = it;
         bool flag = false;
 
         while(it != this->_ADJACENCY_LIST_.end())
@@ -105,12 +108,12 @@ namespace Graph
     template<typename T>
     typename UndirectedGraph<T>::const_edge_iterator UndirectedGraph<T>::begin(int) const
     {
-        std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator it = this->_ADJACENCY_LIST_.begin();
+        typename std::unordered_map<unsigned int, std::vector<Node>>::const_iterator it = this->_ADJACENCY_LIST_.begin();
         if(this->empty())
             return const_edge_iterator(it, it, this->_id_to_node_);
 
-        std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator first_it = it;    // This has the first non-empty mapping.
-        std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator last_it = it;     // This has the last non-empty mapping.
+        typename std::unordered_map<unsigned int, std::vector<Node>>::const_iterator first_it = it;    // This has the first non-empty mapping.
+        typename std::unordered_map<unsigned int, std::vector<Node>>::const_iterator last_it = it;     // This has the last non-empty mapping.
         bool flag = false;
 
         // Finding first_it and last_it.    
@@ -136,12 +139,12 @@ namespace Graph
     template<typename T>
     typename UndirectedGraph<T>::const_edge_iterator UndirectedGraph<T>::end(int) const
     {
-        std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator it = this->_ADJACENCY_LIST_.begin();
+        typename std::unordered_map<unsigned int, std::vector<Node>>::const_iterator it = this->_ADJACENCY_LIST_.begin();
         if(this->empty())
             return const_edge_iterator(it, it, this->_id_to_node_);
 
-        std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator first_it = it;
-        std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator last_it = it;
+        typename std::unordered_map<unsigned int, std::vector<Node>>::const_iterator first_it = it;
+        typename std::unordered_map<unsigned int, std::vector<Node>>::const_iterator last_it = it;
         bool flag = false;
 
         while(it != this->_ADJACENCY_LIST_.end())
@@ -166,12 +169,12 @@ namespace Graph
     template<typename T>
     typename UndirectedGraph<T>::const_edge_iterator UndirectedGraph<T>::cbegin(int) const
     {
-        std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator it = this->_ADJACENCY_LIST_.cbegin();
+        typename std::unordered_map<unsigned int, std::vector<Node>>::const_iterator it = this->_ADJACENCY_LIST_.cbegin();
         if(this->empty())
             return const_edge_iterator(it, it, this->_id_to_node_);
 
-        std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator first_it = it;    // This has the first non-empty mapping.
-        std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator last_it = it;     // This has the last non-empty mapping.
+        typename std::unordered_map<unsigned int, std::vector<Node>>::const_iterator first_it = it;    // This has the first non-empty mapping.
+        typename std::unordered_map<unsigned int, std::vector<Node>>::const_iterator last_it = it;     // This has the last non-empty mapping.
         bool flag = false;
 
         // Finding first_it and last_it.    
@@ -197,12 +200,12 @@ namespace Graph
     template<typename T>
     typename UndirectedGraph<T>::const_edge_iterator UndirectedGraph<T>::cend(int) const
     {
-        std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator it = this->_ADJACENCY_LIST_.cbegin();
+        typename std::unordered_map<unsigned int, std::vector<Node>>::const_iterator it = this->_ADJACENCY_LIST_.cbegin();
         if(this->empty())
             return const_edge_iterator(it, it, this->_id_to_node_);
 
-        std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator first_it = it;
-        std::unordered_map<unsigned int, std::vector<unsigned int>>::const_iterator last_it = it;
+        typename std::unordered_map<unsigned int, std::vector<Node>>::const_iterator first_it = it;
+        typename std::unordered_map<unsigned int, std::vector<Node>>::const_iterator last_it = it;
         bool flag = false;
 
         while(it != this->_ADJACENCY_LIST_.cend())
@@ -224,6 +227,9 @@ namespace Graph
         return const_edge_iterator(last_it, last_it, this->_id_to_node_, last_it->second.cend());
     }
 
+    /*
+     * NON-ITERATOR RELATED FUNCTIONS
+     */
     template<typename T>
     UndirectedGraph<T>::UndirectedGraph() noexcept
     {
@@ -309,7 +315,7 @@ namespace Graph
             {
                 this->_id_to_node_.insert(std::make_pair(this->_id_, vertex));
                 this->_node_to_id_.insert(std::make_pair(vertex, this->_id_));
-                this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<unsigned int>()));
+                this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<Node>()));
                 (this->_id_)++;
             }
             return true;
@@ -332,7 +338,7 @@ namespace Graph
                 {
                     this->_id_to_node_.insert(std::make_pair(this->_id_, vertex));
                     this->_node_to_id_.insert(std::make_pair(vertex, this->_id_));
-                    this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<unsigned int>()));
+                    this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<Node>()));
                     (this->_id_)++;
                 }
             }
@@ -355,7 +361,7 @@ namespace Graph
             {
                 this->_id_to_node_.insert(std::make_pair(this->_id_, vertex1));
                 this->_node_to_id_.insert(std::make_pair(vertex1, this->_id_));
-                this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<unsigned int>{}));
+                this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<Node>{}));
                 (this->_id_)++;
             }
 
@@ -364,20 +370,20 @@ namespace Graph
             {
                 this->_id_to_node_.insert(std::make_pair(this->_id_, vertex2));
                 this->_node_to_id_.insert(std::make_pair(vertex2, this->_id_));
-                this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<unsigned int>{}));
+                this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<Node>{}));
                 (this->_id_)++;
             }
 
-            int id1 = this->_node_to_id_.at(vertex1);
-            int id2 = this->_node_to_id_.at(vertex2);
+            unsigned int id1 = this->_node_to_id_.at(vertex1);
+            unsigned int id2 = this->_node_to_id_.at(vertex2);
 
-            std::vector<unsigned int> edge_list = this->_ADJACENCY_LIST_.at(id1);
+            std::vector<Node> edge_list = this->_ADJACENCY_LIST_.at(id1);
             if(std::find(edge_list.begin(), edge_list.end(), id2) == edge_list.end())
-                this->_ADJACENCY_LIST_.at(id1).push_back(id2);
+                this->_ADJACENCY_LIST_.at(id1).push_back(Node{id2});
 
             edge_list = this->_ADJACENCY_LIST_.at(id2);
             if(std::find(edge_list.begin(), edge_list.end(), id1) == edge_list.end())
-                this->_ADJACENCY_LIST_.at(id2).push_back(id1);
+                this->_ADJACENCY_LIST_.at(id2).push_back(Node{id1});
 
             return true;
         }
@@ -403,7 +409,7 @@ namespace Graph
                 {
                     this->_id_to_node_.insert(std::make_pair(this->_id_, vertex1));
                     this->_node_to_id_.insert(std::make_pair(vertex1, this->_id_));
-                    this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<unsigned int>{}));
+                    this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<Node>{}));
                     (this->_id_)++;
                 }
 
@@ -412,20 +418,20 @@ namespace Graph
                 {
                     this->_id_to_node_.insert(std::make_pair(this->_id_, vertex2));
                     this->_node_to_id_.insert(std::make_pair(vertex2, this->_id_));
-                    this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<unsigned int>{}));
+                    this->_ADJACENCY_LIST_.insert(std::make_pair(this->_id_, std::vector<Node>{}));
                     (this->_id_)++;
                 }
 
-                int id1 = this->_node_to_id_.at(vertex1);
-                int id2 = this->_node_to_id_.at(vertex2);
+                unsigned int id1 = this->_node_to_id_.at(vertex1);
+                unsigned int id2 = this->_node_to_id_.at(vertex2);
 
-                std::vector<unsigned int> edge_list = this->_ADJACENCY_LIST_.at(id1);
+                std::vector<Node> edge_list = this->_ADJACENCY_LIST_.at(id1);
                 if(std::find(edge_list.begin(), edge_list.end(), id2) == edge_list.end())
-                    this->_ADJACENCY_LIST_.at(id1).push_back(id2);
+                    this->_ADJACENCY_LIST_.at(id1).push_back(Node{id2});
 
                 edge_list = this->_ADJACENCY_LIST_.at(id2);
                 if(std::find(edge_list.begin(), edge_list.end(), id1) == edge_list.end())
-                    this->_ADJACENCY_LIST_.at(id2).push_back(id1);
+                    this->_ADJACENCY_LIST_.at(id2).push_back(Node{id1});
             }
 
             return true;
@@ -448,7 +454,7 @@ namespace Graph
                 this->_id_to_node_.erase(id);
                 
                 this->_ADJACENCY_LIST_.erase(id);
-                for(typename std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator it = this->_ADJACENCY_LIST_.begin(); it != this->_ADJACENCY_LIST_.end(); it++)
+                for(typename std::unordered_map<unsigned int, std::vector<Node>>::iterator it = this->_ADJACENCY_LIST_.begin(); it != this->_ADJACENCY_LIST_.end(); it++)
                 {
                     if(std::find(it->second.begin(), it->second.end(), id) != it->second.end())
                     {
@@ -481,7 +487,7 @@ namespace Graph
                     this->_id_to_node_.erase(id);
                     
                     this->_ADJACENCY_LIST_.erase(id);
-                    for(typename std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator it = this->_ADJACENCY_LIST_.begin(); it != this->_ADJACENCY_LIST_.end(); it++)
+                    for(typename std::unordered_map<unsigned int, std::vector<Node>>::iterator it = this->_ADJACENCY_LIST_.begin(); it != this->_ADJACENCY_LIST_.end(); it++)
                     {
                         if(std::find(it->second.begin(), it->second.end(), id) != it->second.end())
                         {
@@ -512,13 +518,13 @@ namespace Graph
                 unsigned int id1 = this->_node_to_id_.at(vertex1);
                 unsigned int id2 = this->_node_to_id_.at(vertex2);
 
-                std::vector<unsigned int> &edge_list1 = this->_ADJACENCY_LIST_.at(id1);
+                std::vector<Node> &edge_list1 = this->_ADJACENCY_LIST_.at(id1);
                 if(std::find(edge_list1.begin(), edge_list1.end(), id2) != edge_list1.end())
                 {
                     edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), id2));
                 }
 
-                std::vector<unsigned int> &edge_list2 = this->_ADJACENCY_LIST_.at(id2);
+                std::vector<Node> &edge_list2 = this->_ADJACENCY_LIST_.at(id2);
                 if(std::find(edge_list2.begin(), edge_list2.end(), id1) != edge_list2.end())
                 {
                     edge_list2.erase(std::remove(edge_list2.begin(), edge_list2.end(), id1));
@@ -549,13 +555,13 @@ namespace Graph
                     unsigned int id1 = this->_node_to_id_.at(vertex1);
                     unsigned int id2 = this->_node_to_id_.at(vertex2);
 
-                    std::vector<unsigned int> &edge_list1 = this->_ADJACENCY_LIST_.at(id1);
+                    std::vector<Node> &edge_list1 = this->_ADJACENCY_LIST_.at(id1);
                     if(std::find(edge_list1.begin(), edge_list1.end(), id2) != edge_list1.end())
                     {
                         edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), id2));
                     }
 
-                    std::vector<unsigned int> &edge_list2 = this->_ADJACENCY_LIST_.at(id2);
+                    std::vector<Node> &edge_list2 = this->_ADJACENCY_LIST_.at(id2);
                     if(std::find(edge_list2.begin(), edge_list2.end(), id1) != edge_list2.end())
                     {
                         edge_list2.erase(std::remove(edge_list2.begin(), edge_list2.end(), id1));
@@ -578,13 +584,13 @@ namespace Graph
         Visited.insert(start);
         std::cout << this->_id_to_node_.at(start);
         
-        std::vector<unsigned int> edge_list = this->_ADJACENCY_LIST_.at(start);
-        for(unsigned int v : edge_list)
+        std::vector<Node> edge_list = this->_ADJACENCY_LIST_.at(start);
+        for(Node N : edge_list)
         {
-            if(Visited.find(v) == Visited.end())
+            if(Visited.find(N.vertex) == Visited.end())
             {
                 std::cout << " -> ";
-                printDFS(v, Visited);
+                printDFS(N.vertex, Visited);
             }
         }
     }
@@ -595,7 +601,7 @@ namespace Graph
         std::cout << "DEPTH FIRST SEARCH\n";
 
         std::unordered_set<unsigned int> Visited;
-        for(const std::pair<unsigned int, std::vector<unsigned int>> &edges : this->_ADJACENCY_LIST_)
+        for(const std::pair<unsigned int, std::vector<Node>> &edges : this->_ADJACENCY_LIST_)
         {
             if(Visited.find(edges.first) == Visited.end())
             {
@@ -620,12 +626,12 @@ namespace Graph
             Q.pop();
             path.push_back(temp);
 
-            for(unsigned int v : this->_ADJACENCY_LIST_.at(temp))
+            for(Node N : this->_ADJACENCY_LIST_.at(temp))
             {
-                if(Visited.find(v) == Visited.end())
+                if(Visited.find(N.vertex) == Visited.end())
                 {
-                    Visited.insert(v);
-                    Q.push(v);
+                    Visited.insert(N.vertex);
+                    Q.push(N.vertex);
                 }
             }
         }
@@ -646,7 +652,7 @@ namespace Graph
         std::cout << "BREADTH FIRST SEARCH" << '\n';
 
         std::unordered_set<unsigned int> Visited;
-        for(const std::pair<unsigned int, std::vector<unsigned int>> &edges : this->_ADJACENCY_LIST_)
+        for(const std::pair<unsigned int, std::vector<Node>> &edges : this->_ADJACENCY_LIST_)
         {
             if(Visited.find(edges.first) == Visited.end())
             {
@@ -660,12 +666,12 @@ namespace Graph
     void UndirectedGraph<T>::printGraph() const
     {
         std::cout << "ADJACENCY LIST" << '\n';
-        for(const std::pair<unsigned int, std::vector<unsigned int>> &e : this->_ADJACENCY_LIST_)
+        for(const std::pair<unsigned int, std::vector<Node>> &e : this->_ADJACENCY_LIST_)
         {
             std::cout << this->_id_to_node_.at(e.first) << " ->  ";
-            for(typename std::vector<unsigned int>::const_iterator it = e.second.begin(); it < e.second.end(); it++)
+            for(typename std::vector<Node>::const_iterator it = e.second.begin(); it < e.second.end(); it++)
             {
-                std::cout << this->_id_to_node_.at(*it);
+                std::cout << this->_id_to_node_.at(it->vertex);
                 if(it != e.second.end() - 1)
                     std::cout << ", ";
             }

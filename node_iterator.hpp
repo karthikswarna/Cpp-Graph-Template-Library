@@ -11,9 +11,9 @@ namespace Graph
         friend class UndirectedGraph<T>;
 
         private:
-            std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator _it_;
+            typename std::unordered_map<unsigned int, std::vector<Node>>::iterator _it_;
             std::unordered_map<unsigned int, T> &_id_to_node_ptr_;
-            node_iterator(const std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator &, std::unordered_map<unsigned int, T> &);
+            node_iterator(const typename std::unordered_map<unsigned int, std::vector<Node>>::iterator &, std::unordered_map<unsigned int, T> &);
 
         public:
             /*
@@ -95,7 +95,7 @@ namespace Graph
 
     // Private constructor. Only move version is sufficienct.
     template<typename T>
-    UndirectedGraph<T>::node_iterator::node_iterator(const std::unordered_map<unsigned int, std::vector<unsigned int>>::iterator &rhs, std::unordered_map<unsigned int, T> &_id_to_node_)
+    UndirectedGraph<T>::node_iterator::node_iterator(const typename std::unordered_map<unsigned int, std::vector<Node>>::iterator &rhs, std::unordered_map<unsigned int, T> &_id_to_node_)
         : _it_ ( std::move(rhs) )
         , _id_to_node_ptr_ ( _id_to_node_ )
     {
