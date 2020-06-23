@@ -13,13 +13,15 @@ namespace Graph
     }
 
     template<typename T>
-    DirectedGraph<T>::DirectedGraph(const DirectedGraph &rhs) noexcept
-        : Graph::UndirectedGraph<T>(rhs)
-    {
+    DirectedGraph<T>::~DirectedGraph() noexcept 
+    { 
+        this->_ADJACENCY_LIST_.clear();
+        this->_id_to_node_.clear();
+        this->_node_to_id_.clear(); 
     }
 
     template<typename T>
-    DirectedGraph<T>::DirectedGraph(DirectedGraph &&rhs) noexcept
+    DirectedGraph<T>::DirectedGraph(const DirectedGraph &rhs) noexcept
         : Graph::UndirectedGraph<T>(rhs)
     {
     }
@@ -33,6 +35,12 @@ namespace Graph
         this->_id_ = rhs._id_;
         return *this;
     }
+    
+    template<typename T>
+    DirectedGraph<T>::DirectedGraph(DirectedGraph &&rhs) noexcept
+        : Graph::UndirectedGraph<T>(rhs)
+    {
+    }
 
     template<typename T>
     DirectedGraph<T>& DirectedGraph<T>::operator=(DirectedGraph &&rhs) noexcept
@@ -43,14 +51,6 @@ namespace Graph
         this->_id_ = std::move(rhs._id_);
         return *this;
     }
-
-    template<typename T>
-    DirectedGraph<T>::~DirectedGraph() noexcept 
-    { 
-        this->_ADJACENCY_LIST_.clear();
-        this->_id_to_node_.clear();
-        this->_node_to_id_.clear(); 
-    }    
 
     template<typename T>
     bool DirectedGraph<T>::addEdge(T vertex1, T vertex2)

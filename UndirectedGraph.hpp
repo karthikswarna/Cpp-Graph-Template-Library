@@ -2,6 +2,7 @@
 #define UNDIRECTED_GRAPH_H
 
 #include <queue>
+#include <tuple>
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -107,6 +108,7 @@ namespace Graph
             // Returns true if the graph is empty, else false. 
             bool empty() const;
 
+
             /*
              * ITERATOR-RELATED FUNCTIONS
              */
@@ -128,33 +130,6 @@ namespace Graph
             const_edge_iterator cbegin(int) const;
             const_edge_iterator end(int) const;
             const_edge_iterator cend(int) const;
-    };
-
-    template<typename T, typename W>
-    class UndirectedGraph<T, W> : public UndirectedGraph<T>
-    {
-        static_assert(std::is_arithmetic<W>::value, "\"Weight type must be numeric\"");
-
-        private:
-            class Node
-            {
-                public:
-                    unsigned int vertex;
-                    W weight;
-
-                    bool operator==(const unsigned int v) const
-                    {
-                        return vertex == v;
-                    }
-
-                    bool operator==(const Node &N) const
-                    {
-                        return vertex == N.vertex;
-                    }
-            };
-
-            std::unordered_map<unsigned int, std::vector<std::pair<unsigned int, W>>> _ADJACENCY_LIST_;
-
     };
 }
 
