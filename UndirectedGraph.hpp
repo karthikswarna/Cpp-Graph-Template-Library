@@ -11,32 +11,42 @@
 
 namespace Graph
 {
-    template<typename... X>
-    class UndirectedGraph;
+    template<typename W = int>
+    class Node
+    {
+        static_assert(std::is_arithmetic<W>::value, "\"Weight type must be numeric\"");
 
-    template<typename T>
-    class UndirectedGraph<T>
+        public:
+            unsigned int vertex;
+            W weight;
+
+            Node(unsigned int v) : vertex (v)
+            {
+                weight = 1;
+            }
+            Node(unsigned int v, W w) : vertex (v), weight(w)
+            {
+            }
+
+            bool operator==(const unsigned int v) const
+            {
+                return vertex == v;
+            }
+
+            bool operator==(const Node &N) const
+            {
+                return vertex == N.vertex;
+            }
+    };
+
+    template<typename T, typename W = int>
+    class UndirectedGraph
     {   
         protected:
-            class Node
-            {
-                public:
-                    unsigned int vertex;
-
-                    bool operator==(const unsigned int v) const
-                    {
-                        return vertex == v;
-                    }
-
-                    bool operator==(const Node &N) const
-                    {
-                        return vertex == N.vertex;
-                    }
-            };
-
-            std::unordered_map<unsigned int, std::vector<Node>> _ADJACENCY_LIST_;
+            std::unordered_map<unsigned int, std::vector<Node<W>>> _ADJACENCY_LIST_;
             std::unordered_map<unsigned int, T> _id_to_node_;
             std::unordered_map<T, unsigned int> _node_to_id_;
+            bool neg_weight{false};
             unsigned int _id_{0};
 
         public:
@@ -75,9 +85,11 @@ namespace Graph
             // Given a list of objects, adds each of them to the graph, if it doesn't exist already.
             bool addVertices(const std::vector<T> &);
             // Given two objects, adds the edge between them to the graph, if it doesn't exist already.
-            bool addEdge(T, T);
+            bool addEdge(T, T, W weight = 1);
             // Given a list of pair of objects, adds each edge to the graph, if it doesn't exist already.
             bool addEdges(const std::vector<std::pair<T, T>> &);
+            // Given a list of pair of objects along with weights, adds each edge to the graph, if it doesn't exist already.
+            bool addEdges(const std::vector<std::tuple<T, T, W>> &);
             
             // Given an object, removes it and its edges from the graph, if it exists.
             bool removeVertex(T);
@@ -103,6 +115,8 @@ namespace Graph
 
             // Prints the Adjacency list of the graph.
             void printGraph() const;
+            // Prints the Adjacency list of the graph along with weights.
+            void printWeightedGraph() const;
             // Returns the degree of a vertex, if it exists. If the vertex doesn't exist, returns -1.
             int getDegree(T) const;
             // Returns true if the graph is empty, else false. 

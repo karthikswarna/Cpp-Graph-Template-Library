@@ -5,8 +5,8 @@
 
 namespace Graph
 {
-    template<typename T>
-    class DirectedGraph : public UndirectedGraph<T>
+    template<typename T, typename W = int>
+    class DirectedGraph : public UndirectedGraph<T, W>
     {
         public:
             /*
@@ -32,9 +32,11 @@ namespace Graph
              * NON-CONST MEMBER FUNCTIONS
              */
             // Given two objects, adds the edge between them to the graph, if it doesn't exist already.
-            bool addEdge(T, T);
+            bool addEdge(T, T, W = 1);
             // Given a list of pair of objects, adds each edge to the graph, if it doesn't exist already.
             bool addEdges(const std::vector<std::pair<T, T>> &);
+            // Given a list of pair of objects along with weights, adds each edge to the graph, if it doesn't exist already.
+            bool addEdges(const std::vector<std::tuple<T, T, W>> &);
 
             // Given two objects, removes the edge between them from the graph, if it exists.
             bool removeEdge(T, T);
