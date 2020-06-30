@@ -35,7 +35,7 @@ namespace Graph
 
             bool operator==(const Node &N) const
             {
-                return vertex == N.vertex;
+                return vertex == N.vertex && weight == N.weight;
             }
     };
 
@@ -46,7 +46,8 @@ namespace Graph
             std::unordered_map<unsigned int, std::vector<Node<W>>> _ADJACENCY_LIST_;
             std::unordered_map<unsigned int, T> _id_to_node_;
             std::unordered_map<T, unsigned int> _node_to_id_;
-            bool neg_weight{false};
+            bool isNegWeighted{false};
+            bool isWeighted{false};
             unsigned int _id_{0};
 
         public:
@@ -88,17 +89,21 @@ namespace Graph
             bool addEdge(T, T, W weight = 1);
             // Given a list of pair of objects, adds each edge to the graph, if it doesn't exist already.
             bool addEdges(const std::vector<std::pair<T, T>> &);
-            // Given a list of pair of objects along with weights, adds each edge to the graph, if it doesn't exist already.
+            // Given a list of tuple of objects along with weights, adds each edge to the graph, if it doesn't exist already.
             bool addEdges(const std::vector<std::tuple<T, T, W>> &);
             
             // Given an object, removes it and its edges from the graph, if it exists.
             bool removeVertex(T);
             // Given a list of objects, removes each of them and its edges from the graph, if it exists.
             bool removeVertices(const std::vector<T> &);
-            // Given two objects, removes the edge between them from the graph, if it exists.
+            // Given two objects, removes all edges present between them from the graph, if any exists.
             bool removeEdge(T, T);
-            // Given a list of pair of objects, removes each edge from the graph, if it exists.
+            // Given a list of pair of objects, removes all edges between each them from the graph, if any exists.
             bool removeEdges(const std::vector<std::pair<T, T>> &);
+            // Given two objects and weight, removes the specified edge from the graph, if it exists.
+            bool removeEdge(T, T, W);
+            // Given a list of tuple of vertices and weights, removes each specified edge from the graph, if it exists.
+            bool removeEdges(const std::vector<std::tuple<T, T, W>> &);
 
 
             /*

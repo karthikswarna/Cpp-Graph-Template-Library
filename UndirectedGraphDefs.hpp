@@ -237,7 +237,7 @@ namespace Graph
 
     template<typename T, typename W>
     UndirectedGraph<T, W>::~UndirectedGraph() noexcept 
-    { 
+    {
         this->_ADJACENCY_LIST_.clear();
         this->_id_to_node_.clear();
         this->_node_to_id_.clear();
@@ -248,6 +248,8 @@ namespace Graph
         : _ADJACENCY_LIST_ ( rhs._ADJACENCY_LIST_ )
         , _id_to_node_ ( rhs._id_to_node_ )
         , _node_to_id_ (rhs._node_to_id_)
+        , isNegWeighted ( rhs.isNegWeighted )
+        , isWeighted ( rhs.isWeighted )
         , _id_ ( rhs._id_ )
     {
     }
@@ -258,6 +260,8 @@ namespace Graph
         this->_ADJACENCY_LIST_ = rhs._ADJACENCY_LIST_;
         this->_id_to_node_ = rhs._id_to_node_;
         this->_node_to_id_ = rhs._node_to_id_;
+        this->isNegWeighted = rhs.isNegWeighted;
+        this->isWeighted = rhs.isWeighted;
         this->_id_ = rhs._id_;
         return *this;
     }
@@ -267,6 +271,8 @@ namespace Graph
         : _ADJACENCY_LIST_ ( std::move(rhs._ADJACENCY_LIST_) )
         , _id_to_node_ ( std::move(rhs._id_to_node_) )
         , _node_to_id_ ( std::move(rhs._node_to_id_) )
+        , isNegWeighted (std::move(rhs.isNegWeighted) )
+        , isWeighted ( std::move(rhs.isWeighted) )
         , _id_ ( std::move(rhs._id_) )
     {
     }
@@ -277,6 +283,8 @@ namespace Graph
         this->_ADJACENCY_LIST_ = std::move(rhs._ADJACENCY_LIST_);
         this->_id_to_node_ = std::move(rhs._id_to_node_);
         this->_node_to_id_ = std::move(rhs._node_to_id_);
+        this->isNegWeighted = std::move(rhs.isNegWeighted);
+        this->isWeighted = std::move(rhs.isWeighted);
         this->_id_ = std::move(rhs._id_);
         return *this;
     }
@@ -286,7 +294,9 @@ namespace Graph
     {
         return this->_ADJACENCY_LIST_ == rhs._ADJACENCY_LIST_
             && this->_id_to_node_ == rhs._id_to_node_
-            && this->_node_to_id_ == rhs._node_to_id_;
+            && this->_node_to_id_ == rhs._node_to_id_
+            && this->isNegWeighted == rhs.isNegWeighted
+            && this->isWeighted == rhs.isWeighted;
     }
 
     template<typename T, typename W>
@@ -294,7 +304,9 @@ namespace Graph
     {
         return this->_ADJACENCY_LIST_ != rhs._ADJACENCY_LIST_
             || this->_id_to_node_ != rhs._id_to_node_
-            || this->_node_to_id_ != rhs._node_to_id_;
+            || this->_node_to_id_ != rhs._node_to_id_
+            || this->isNegWeighted != rhs.isNegWeighted
+            || this->isWeighted != rhs.isWeighted;
     }
 
     template<typename T, typename W>
@@ -303,6 +315,8 @@ namespace Graph
         this->_ADJACENCY_LIST_.swap(rhs._ADJACENCY_LIST_);
         this->_id_to_node_.swap(rhs._id_to_node_);
         this->_node_to_id_.swap(rhs._node_to_id_);
+        std::swap(this->isNegWeighted, rhs.isNegWeighted);
+        std::swap(this->isWeighted, rhs.isWeighted);
         std::swap(this->_id_, rhs._id_);
     }
 
@@ -378,14 +392,16 @@ namespace Graph
             unsigned int id2 = this->_node_to_id_.at(vertex2);
 
             if(weight < 0)
-                this->neg_weight = true;
+                this->isNegWeighted = true;
+            if(weight > 1)
+                this->isWeighted = true;
 
             std::vector<Node<W>> edge_list = this->_ADJACENCY_LIST_.at(id1);
-            if(std::find(edge_list.begin(), edge_list.end(), id2) == edge_list.end())
+            if(std::find(edge_list.begin(), edge_list.end(), Node<W>{id2, weight}) == edge_list.end())
                 this->_ADJACENCY_LIST_.at(id1).push_back(Node<W>{id2, weight});
 
             edge_list = this->_ADJACENCY_LIST_.at(id2);
-            if(std::find(edge_list.begin(), edge_list.end(), id1) == edge_list.end())
+            if(std::find(edge_list.begin(), edge_list.end(), Node<W>{id1, weight}) == edge_list.end())
                 this->_ADJACENCY_LIST_.at(id2).push_back(Node<W>{id1, weight});
 
             return true;
@@ -479,14 +495,16 @@ namespace Graph
                 unsigned int id2 = this->_node_to_id_.at(vertex2);
 
                 if(weight < 0)
-                    this->neg_weight = true;
+                    this->isNegWeighted = true;
+                if(weight > 1)
+                    this->isWeighted = true;
 
                 std::vector<Node<W>> edge_list = this->_ADJACENCY_LIST_.at(id1);
-                if(std::find(edge_list.begin(), edge_list.end(), id2) == edge_list.end())
+                if(std::find(edge_list.begin(), edge_list.end(), Node<W>{id2, weight}) == edge_list.end())
                     this->_ADJACENCY_LIST_.at(id1).push_back(Node<W>{id2, weight});
 
                 edge_list = this->_ADJACENCY_LIST_.at(id2);
-                if(std::find(edge_list.begin(), edge_list.end(), id1) == edge_list.end())
+                if(std::find(edge_list.begin(), edge_list.end(), Node<W>{id1, weight}) == edge_list.end())
                     this->_ADJACENCY_LIST_.at(id2).push_back(Node<W>{id1, weight});
             }
 
@@ -514,7 +532,7 @@ namespace Graph
                 {
                     if(std::find(it->second.begin(), it->second.end(), id) != it->second.end())
                     {
-                        it->second.erase(std::remove(it->second.begin(), it->second.end(), id));
+                        it->second.erase(std::remove(it->second.begin(), it->second.end(), id), it->second.end());
                     }
                 }
                 
@@ -547,7 +565,7 @@ namespace Graph
                     {
                         if(std::find(it->second.begin(), it->second.end(), id) != it->second.end())
                         {
-                            it->second.erase(std::remove(it->second.begin(), it->second.end(), id));
+                            it->second.erase(std::remove(it->second.begin(), it->second.end(), id), it->second.end());
                         }
                     }
                     
@@ -577,13 +595,13 @@ namespace Graph
                 std::vector<Node<W>> &edge_list1 = this->_ADJACENCY_LIST_.at(id1);
                 if(std::find(edge_list1.begin(), edge_list1.end(), id2) != edge_list1.end())
                 {
-                    edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), id2));
+                    edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), id2), edge_list1.end());
                 }
 
                 std::vector<Node<W>> &edge_list2 = this->_ADJACENCY_LIST_.at(id2);
                 if(std::find(edge_list2.begin(), edge_list2.end(), id1) != edge_list2.end())
                 {
-                    edge_list2.erase(std::remove(edge_list2.begin(), edge_list2.end(), id1));
+                    edge_list2.erase(std::remove(edge_list2.begin(), edge_list2.end(), id1), edge_list2.end());
                 }
             }
 
@@ -614,13 +632,84 @@ namespace Graph
                     std::vector<Node<W>> &edge_list1 = this->_ADJACENCY_LIST_.at(id1);
                     if(std::find(edge_list1.begin(), edge_list1.end(), id2) != edge_list1.end())
                     {
-                        edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), id2));
+                        edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), id2), edge_list1.end());
                     }
 
                     std::vector<Node<W>> &edge_list2 = this->_ADJACENCY_LIST_.at(id2);
                     if(std::find(edge_list2.begin(), edge_list2.end(), id1) != edge_list2.end())
                     {
-                        edge_list2.erase(std::remove(edge_list2.begin(), edge_list2.end(), id1));
+                        edge_list2.erase(std::remove(edge_list2.begin(), edge_list2.end(), id1), edge_list2.end());
+                    }
+                }
+            }
+
+            return true;
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+            return false;
+        }
+    }
+
+    template<typename T, typename W>
+    bool UndirectedGraph<T, W>::removeEdge(T vertex1, T vertex2, W weight)
+    {
+        try
+        {
+            if(this->_node_to_id_.find(vertex1) != this->_node_to_id_.end() && this->_node_to_id_.find(vertex2) != this->_node_to_id_.end())
+            {
+                unsigned int id1 = this->_node_to_id_.at(vertex1);
+                unsigned int id2 = this->_node_to_id_.at(vertex2);
+
+                std::vector<Node<W>> &edge_list1 = this->_ADJACENCY_LIST_.at(id1);
+                if(std::find(edge_list1.begin(), edge_list1.end(), Node<W>{id2, weight}) != edge_list1.end())
+                {
+                    edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), Node<W>{id2, weight}), edge_list1.end());
+                }
+
+                std::vector<Node<W>> &edge_list2 = this->_ADJACENCY_LIST_.at(id2);
+                if(std::find(edge_list2.begin(), edge_list2.end(), Node<W>{id1, weight}) != edge_list2.end())
+                {
+                    edge_list2.erase(std::remove(edge_list2.begin(), edge_list2.end(), Node<W>{id1, weight}), edge_list2.end());
+                }
+            }
+
+            return true;
+        }
+        catch(const std::exception& e)
+        {
+            std::cout << e.what() << '\n';
+            return false;
+        }
+    }
+
+    template<typename T, typename W>
+    bool UndirectedGraph<T, W>::removeEdges(const std::vector<std::tuple<T, T, W>> &edges)
+    {
+        try
+        {
+            for(const std::tuple<T, T, W> &e : edges)
+            {
+                T vertex1 = std::get<0>(e);
+                T vertex2 = std::get<1>(e);
+                W weight = std::get<2>(e);
+
+                if(this->_node_to_id_.find(vertex1) != this->_node_to_id_.end() && this->_node_to_id_.find(vertex2) != this->_node_to_id_.end())
+                {
+                    unsigned int id1 = this->_node_to_id_.at(vertex1);
+                    unsigned int id2 = this->_node_to_id_.at(vertex2);
+
+                    std::vector<Node<W>> &edge_list1 = this->_ADJACENCY_LIST_.at(id1);
+                    if(std::find(edge_list1.begin(), edge_list1.end(), Node<W>{id2, weight}) != edge_list1.end())
+                    {
+                        edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), Node<W>{id2, weight}), edge_list1.end());
+                    }
+
+                    std::vector<Node<W>> &edge_list2 = this->_ADJACENCY_LIST_.at(id2);
+                    if(std::find(edge_list2.begin(), edge_list2.end(), Node<W>{id1, weight}) != edge_list2.end())
+                    {
+                        edge_list2.erase(std::remove(edge_list2.begin(), edge_list2.end(), Node<W>{id1, weight}), edge_list2.end());
                     }
                 }
             }

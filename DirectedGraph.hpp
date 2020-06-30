@@ -38,10 +38,15 @@ namespace Graph
             // Given a list of pair of objects along with weights, adds each edge to the graph, if it doesn't exist already.
             bool addEdges(const std::vector<std::tuple<T, T, W>> &);
 
-            // Given two objects, removes the edge between them from the graph, if it exists.
+            // Given two objects, removes all edges present between them from the graph, if any exists.
             bool removeEdge(T, T);
-            // Given a list of pair of objects, removes each edge from the graph, if it exists.
+            // Given a list of pair of objects, removes all edges between each them from the graph, if any exists.
             bool removeEdges(const std::vector<std::pair<T, T>> &);
+            // Given two objects and weight, removes the specified edge from the graph, if it exists.
+            bool removeEdge(T, T, W);
+            // Given a list of tuple of vertices and weights, removes each specified edge from the graph, if it exists.
+            bool removeEdges(const std::vector<std::tuple<T, T, W>> &);
+
 
 
             /*
