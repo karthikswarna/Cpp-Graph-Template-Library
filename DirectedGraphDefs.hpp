@@ -299,6 +299,40 @@ namespace Graph
         }
     }
 
+    // template<typename T, typename W>
+    // bool UndirectedGraph<T, W>::isCyclic() const
+    // {
+    //     std::unordered_set<unsigned int> Visited;
+    //     std::unordered_set<unsigned int> recStack;
+
+    //     for(const std::pair<unsigned int, std::vector<Node<W>>> &edges : this->_ADJACENCY_LIST_)
+    //         if(isCyclicUtil(edges.first, Visited, recStack))
+    //             return true;
+
+    //     return false;
+    // }
+
+    // template<typename T, typename W>
+    // bool UndirectedGraph<T, W>::isCyclicUtil(unsigned int start, std::unordered_set<unsigned int> &Visited, std::unordered_set<unsigned int> &recStack) const
+    // {
+    //     if(Visited.find(start) == Visited.end())
+    //     {
+    //         Visited.insert(start);
+    //         recStack.insert(start);
+
+    //         for(const Node<W> &node : this->_ADJACENCY_LIST_.at(start))
+    //         {
+    //             if(Visited.find(node.vertex) == Visited.end() && isCyclicUtil(node.vertex, Visited, recStack))
+    //                 return true;
+    //             else if(recStack.find(node.vertex) != recStack.end())
+    //                 return true;
+    //         }
+    //     }
+
+    //     recStack.erase(start);
+    //     return false;
+    // }
+
     template<typename T, typename W>
     bool DirectedGraph<T, W>::isCyclic() const
     {

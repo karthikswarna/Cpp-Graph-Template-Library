@@ -4,6 +4,7 @@
 #include <queue>
 #include <tuple>
 #include <vector>
+#include <climits>
 #include <iostream>
 #include <algorithm>
 #include <unordered_map>
@@ -48,7 +49,7 @@ namespace Graph
             std::unordered_map<T, unsigned int> _node_to_id_;
             bool isNegWeighted{false};
             bool isWeighted{false};
-            unsigned int _id_{0};
+            unsigned int _id_{1};
 
         public:
             /*
@@ -118,6 +119,15 @@ namespace Graph
             // Function to print BFS; prints each connected component on different line.
             void printBFS() const;
 
+            // Given two vertices, returns the length of shortest path between them.
+            // If the destination is not reachable or if any of the vertex is invalid, returns -1.
+            long long shortestDistance(T, T) const;
+            // Given two vertices, returns the shortest path between them.
+            // If the destination is not reachable or if any of the vertex is invalid, returns EMPTY VECTOR.
+            std::vector<T> shortestPath(T, T) const;
+            // Returns true of the graph contains a cycle.
+            bool isCyclic() const;
+
             // Prints the Adjacency list of the graph.
             void printGraph() const;
             // Prints the Adjacency list of the graph along with weights.
@@ -149,6 +159,15 @@ namespace Graph
             const_edge_iterator cbegin(int) const;
             const_edge_iterator end(int) const;
             const_edge_iterator cend(int) const;
+
+        private:
+            bool isCyclicUtil(unsigned int, std::unordered_set<unsigned int> &, unsigned int) const;
+            /*
+             * SHORTEST PATH RELATED FUNCTIONS
+             */
+            std::tuple<long long, std::unordered_map<unsigned int, unsigned int>> Dijkstra(unsigned int, unsigned int) const;
+            void bellmanFord() const;
+            void bidirectionalSearch() const;
     };
 }
 

@@ -808,6 +808,38 @@ namespace Graph
     }
 
     template<typename T, typename W>
+    bool UndirectedGraph<T, W>::isCyclic() const
+    {
+        std::unordered_set<unsigned int> Visited;
+
+        for(const std::pair<unsigned int, std::vector<Node<W>>> &edges : this->_ADJACENCY_LIST_)
+            if(Visited.find(edges.first) == Visited.end())
+                if(isCyclicUtil(edges.first, Visited, 0))
+                    return true;
+
+        return false;
+    }
+
+    template<typename T, typename W>
+    bool UndirectedGraph<T, W>::isCyclicUtil(unsigned int start, std::unordered_set<unsigned int> &Visited, unsigned int parent) const
+    {
+        Visited.insert(start);
+
+        for(const Node<W> &node : this->_ADJACENCY_LIST_.at(start))
+        {
+            if(Visited.find(node.vertex) == Visited.end())
+            {
+                if(isCyclicUtil(node.vertex, Visited, start))
+                    return true;
+            }
+            else if(node.vertex != parent)
+                return true;
+        }
+
+        return false;
+    }
+
+    template<typename T, typename W>
     void UndirectedGraph<T, W>::printGraph() const
     {
         std::cout << "ADJACENCY LIST" << '\n';
@@ -856,5 +888,7 @@ namespace Graph
         return this->_id_to_node_.empty();
     }
 }
+
+#include "shortestPath.hpp"
 
 #endif
