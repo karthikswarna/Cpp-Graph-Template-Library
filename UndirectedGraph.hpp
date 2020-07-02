@@ -169,7 +169,7 @@ namespace Graph
              */
             std::tuple<double, std::unordered_map<unsigned int, unsigned int>> Dijkstra(unsigned int, unsigned int) const;
             std::tuple<double, std::unordered_map<unsigned int, unsigned int>> bellmanFord(unsigned int, unsigned int) const;
-            void bidirectionalSearch() const;
+            std::tuple<double, std::vector<T>> bidirectionalSearch(unsigned int, unsigned int) const;
     };
 }
 
