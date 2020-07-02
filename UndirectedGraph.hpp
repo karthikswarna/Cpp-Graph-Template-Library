@@ -120,10 +120,12 @@ namespace Graph
             void printBFS() const;
 
             // Given two vertices, returns the length of shortest path between them.
-            // If the destination is not reachable or if any of the vertex is invalid, returns -1.
-            long long shortestDistance(T, T) const;
+            // If the destination is not reachable, returns inf.
+            // If the destination is a part of negative cycle, returns -inf.
+            // if any of the vertex is invalid, returns -1.
+            double shortestDistance(T, T) const;
             // Given two vertices, returns the shortest path between them.
-            // If the destination is not reachable or if any of the vertex is invalid, returns EMPTY VECTOR.
+            // If the destination is not reachable || If the destination is a part of negative cycle || If any of the vertex is invalid, returns EMPTY VECTOR.
             std::vector<T> shortestPath(T, T) const;
             // Returns true of the graph contains a cycle.
             bool isCyclic() const;
@@ -165,8 +167,8 @@ namespace Graph
             /*
              * SHORTEST PATH RELATED FUNCTIONS
              */
-            std::tuple<long long, std::unordered_map<unsigned int, unsigned int>> Dijkstra(unsigned int, unsigned int) const;
-            void bellmanFord() const;
+            std::tuple<double, std::unordered_map<unsigned int, unsigned int>> Dijkstra(unsigned int, unsigned int) const;
+            std::tuple<double, std::unordered_map<unsigned int, unsigned int>> bellmanFord(unsigned int, unsigned int) const;
             void bidirectionalSearch() const;
     };
 }
