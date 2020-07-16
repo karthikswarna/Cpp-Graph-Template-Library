@@ -49,7 +49,7 @@ namespace Graph
             std::unordered_map<T, unsigned int> _node_to_id_;
             bool isNegWeighted{false};
             bool isWeighted{false};
-            unsigned int _id_{1};
+            unsigned int _id_{1};       // 0 can be used to check the default value.
 
         public:
             /*
@@ -127,6 +127,15 @@ namespace Graph
             // Given two vertices, returns the shortest path between them.
             // If the destination is not reachable || If the destination is a part of negative cycle || If any of the vertex is invalid, returns EMPTY VECTOR.
             std::vector<T> shortestPath(T, T) const;
+            // Given a vertex, returns the length of shortest paths from it to all other vertices.
+            // If the destination is not reachable, returns inf.
+            // If the destination is a part of negative cycle, returns -inf.
+            // if any of the vertex is invalid, returns -1.
+            std::unordered_map<T, double> singleSourceShortestDistances(unsigned int) const;
+            // Given a vertex, returns the shortest path from it to all other vertices.
+            // If the destination is not reachable || If the destination is a part of negative cycle || If any of the vertex is invalid, returns EMPTY VECTOR.
+            std::unordered_map<T, std::vector<T>> singleSourceShortestPaths(unsigned int) const;
+
             // Returns true of the graph contains a cycle.
             bool isCyclic() const;
 
@@ -167,8 +176,18 @@ namespace Graph
             /*
              * SHORTEST PATH RELATED FUNCTIONS
              */
-            std::tuple<double, std::unordered_map<unsigned int, unsigned int>> Dijkstra(unsigned int, unsigned int) const;
-            std::tuple<double, std::unordered_map<unsigned int, unsigned int>> bellmanFord(unsigned int, unsigned int) const;
+            // If two valid vertices are given, returns (bestDistancesMap, bestPathsMap) tuple.
+            // For graph without a negative cycle.
+            // To disable early stopping(for SSSP problem), call this function without second parameter.
+            std::tuple<std::unordered_map<unsigned int, double>, std::unordered_map<unsigned int, unsigned int>> Dijkstra(unsigned int, unsigned int = 0) const;
+            // If two valid vertices are given, returns (bestDistancesMap, bestPathsMap) tuple.
+            // Works for any graph, best used for graph with a negative cycle.
+            std::tuple<std::unordered_map<unsigned int, double>, std::unordered_map<unsigned int, unsigned int>> bellmanFord(unsigned int) const;
+            // If two valid vertices are given, returns (bestDistancesMap, bestPathsMap) tuple.
+            // For an unweighted graph.
+            std::tuple<std::unordered_map<unsigned int, double>, std::unordered_map<unsigned int, unsigned int>> breadthFirstSearch(unsigned int) const;
+            // If two valid vertices are given, returns (bestDistance, bestPath) tuple.
+            // Shortest Path is not found for all the vertices. Works only when both source, destination are given.
             std::tuple<double, std::vector<T>> bidirectionalSearch(unsigned int, unsigned int) const;
     };
 }
