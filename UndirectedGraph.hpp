@@ -49,11 +49,11 @@ namespace Graph
             std::unordered_map<T, unsigned int> _node_to_id_;
             bool isNegWeighted{false};
             bool isWeighted{false};
-            unsigned int _id_{1};       // 0 can be used to check the default value.
+            unsigned int _id_{1};       // 0 can be used as sentinel.
 
         public:
             /*
-             * SPECIAL MEMBER FUNCTIONS
+             *  SPECIAL MEMBER FUNCTIONS
              */
             // Default constructor.
             UndirectedGraph() noexcept;
@@ -77,7 +77,7 @@ namespace Graph
 
 
             /*
-             * NON-CONST MEMBER FUNCTIONS
+             *  NON-CONST MEMBER FUNCTIONS
              */
             // Swaps the internal data structures of the given graphs.
             void swap(UndirectedGraph &);
@@ -108,7 +108,7 @@ namespace Graph
 
 
             /*
-             * CONST MEMBER FUNCTIONS
+             *  CONST MEMBER FUNCTIONS
              */
             // Helper function to print DFS; takes starting vertex and set of visited vertices.
             void printDFS(unsigned int, std::unordered_set<unsigned int> &) const;
@@ -119,22 +119,24 @@ namespace Graph
             // Function to print BFS; prints each connected component on different line.
             void printBFS() const;
 
+            /*
+             *  If the destination is not reachable, distance is inf.
+             *  If the destination is a part of negative cycle, distance is -inf.
+             *  If any of the vertex is invalid, distance is -1.
+             *  If the destination is not reachable || If the destination is a part of negative cycle || If any of the vertex is invalid, path is EMPTY VECTOR.
+             */
             // Given two vertices, returns the length of shortest path between them.
-            // If the destination is not reachable, returns inf.
-            // If the destination is a part of negative cycle, returns -inf.
-            // if any of the vertex is invalid, returns -1.
             double shortestDistance(T, T) const;
             // Given two vertices, returns the shortest path between them.
-            // If the destination is not reachable || If the destination is a part of negative cycle || If any of the vertex is invalid, returns EMPTY VECTOR.
             std::vector<T> shortestPath(T, T) const;
             // Given a vertex, returns the length of shortest paths from it to all other vertices.
-            // If the destination is not reachable, returns inf.
-            // If the destination is a part of negative cycle, returns -inf.
-            // if any of the vertex is invalid, returns -1.
             std::unordered_map<T, double> singleSourceShortestDistances(unsigned int) const;
             // Given a vertex, returns the shortest path from it to all other vertices.
-            // If the destination is not reachable || If the destination is a part of negative cycle || If any of the vertex is invalid, returns EMPTY VECTOR.
             std::unordered_map<T, std::vector<T>> singleSourceShortestPaths(unsigned int) const;
+            // Returns the length of shortest paths for all pairs of vertices.
+            std::unordered_map<T, std::unordered_map<T, double>> allPairsShortestDistances() const;
+            // Returns the shortest path for all pairs of vertices.
+            std::unordered_map<T, std::unordered_map<T, std::vector<T>>> allPairsShortestPaths() const;
 
             // Returns true of the graph contains a cycle.
             bool isCyclic() const;
@@ -150,7 +152,7 @@ namespace Graph
 
 
             /*
-             * ITERATOR-RELATED FUNCTIONS
+             *  ITERATOR-RELATED FUNCTIONS
              */
             class node_iterator;
             class const_node_iterator;
@@ -174,21 +176,18 @@ namespace Graph
         private:
             bool isCyclicUtil(unsigned int, std::unordered_set<unsigned int> &, unsigned int) const;
             /*
-             * SHORTEST PATH RELATED FUNCTIONS
+             *  SHORTEST PATH RELATED FUNCTIONS
+             *  If two valid vertices are given, returns (bestDistancesMap, bestPathsMap) tuple,
+             *  except for bidirectionalSearch which returns (bestDistance, bestPath) tuple.
+             *  Use Bellman-Ford for negative weighted graphs, Bidirectional Search/BFS for unweighted graphs, Dijkstra for others.
+             *  BFS for SSSP, Bidirectional Search for when both source and destination are given.
              */
-            // If two valid vertices are given, returns (bestDistancesMap, bestPathsMap) tuple.
-            // For graph without a negative cycle.
             // To disable early stopping(for SSSP problem), call this function without second parameter.
             std::tuple<std::unordered_map<unsigned int, double>, std::unordered_map<unsigned int, unsigned int>> Dijkstra(unsigned int, unsigned int = 0) const;
-            // If two valid vertices are given, returns (bestDistancesMap, bestPathsMap) tuple.
-            // Works for any graph, best used for graph with a negative cycle.
             std::tuple<std::unordered_map<unsigned int, double>, std::unordered_map<unsigned int, unsigned int>> bellmanFord(unsigned int) const;
-            // If two valid vertices are given, returns (bestDistancesMap, bestPathsMap) tuple.
-            // For an unweighted graph.
             std::tuple<std::unordered_map<unsigned int, double>, std::unordered_map<unsigned int, unsigned int>> breadthFirstSearch(unsigned int) const;
-            // If two valid vertices are given, returns (bestDistance, bestPath) tuple.
-            // Shortest Path is not found for all the vertices. Works only when both source, destination are given.
             std::tuple<double, std::vector<T>> bidirectionalSearch(unsigned int, unsigned int) const;
+            std::tuple<std::unordered_map<unsigned int, std::unordered_map<unsigned int, double>>, std::unordered_map<unsigned int, std::unordered_map<unsigned int, unsigned int>>> floydWarshall() const;
     };
 }
 

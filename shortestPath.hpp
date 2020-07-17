@@ -139,6 +139,62 @@ namespace Graph
         return Paths;
     }
 
+    template<typename T, typename W>
+    std::unordered_map<T, std::unordered_map<T, double>> UndirectedGraph<T, W>::allPairsShortestDistances() const
+    {
+        std::unordered_map<unsigned int, std::unordered_map<unsigned int, double>> Distance;
+        std::unordered_map<T, std::unordered_map<T, double>> DistanceFinal;
+
+        Distance = std::get<0>(floydWarshall());
+        for(const std::pair<unsigned int, std::unordered_map<unsigned int, double>> &edge : Distance)
+            for(const std::pair<unsigned int, double> &edge2 : edge.second)
+                DistanceFinal[this->_id_to_node_.at(edge.first)][this->_id_to_node_.at(edge2.first)] =  edge2.second;
+
+        return DistanceFinal;
+    }
+
+    template<typename T, typename W>
+    std::unordered_map<T, std::unordered_map<T, std::vector<T>>> UndirectedGraph<T, W>::allPairsShortestPaths() const
+    {
+        std::unordered_map<unsigned int, std::unordered_map<unsigned int, unsigned int>> Next;
+        std::unordered_map<unsigned int, std::unordered_map<unsigned int, double>> Distance;
+        std::unordered_map<T, std::unordered_map<T, std::vector<T>>> Paths;
+
+        std::tie(Distance, Next) = floydWarshall();
+
+        // For each pair of vertices.
+        for(const std::pair<unsigned int, std::vector<Node<W>>> &edge_list : this->_ADJACENCY_LIST_)
+        {
+            for(const std::pair<unsigned int, std::vector<Node<W>>> &edge_list2 : this->_ADJACENCY_LIST_)
+            {
+                // If the distance is infinity, empty path.
+                if(Distance[edge_list.first][edge_list2.first] == std::numeric_limits<double>::infinity())
+                    Paths[this->_id_to_node_.at(edge_list.first)][this->_id_to_node_.at(edge_list2.first)] = std::vector<T>();
+                else
+                {
+                    // Reconstruct the path.
+                    std::vector<T> &Path = Paths[this->_id_to_node_.at(edge_list.first)][this->_id_to_node_.at(edge_list2.first)];
+                    unsigned int at = edge_list.first;
+                    for(; at != edge_list2.first; at = Next[at][edge_list2.first])
+                    {
+                        if(at == 0)
+                        {
+                            Path.clear();
+                            break;
+                        }
+                        Path.push_back(this->_id_to_node_.at(at));
+                    }
+                    if(Next[at][edge_list2.first] == 0)
+                        Path.clear();
+                    else
+                        Path.push_back(this->_id_to_node_.at(edge_list2.first));
+                }
+            }
+        }
+
+        return Paths;
+    }
+
     struct comp
     { 
         constexpr bool operator()(const std::pair<unsigned int, double> &a, const std::pair<unsigned int, double> &b) const noexcept
@@ -389,6 +445,59 @@ namespace Graph
         }
 
         return std::tuple<double, std::vector<T>>(std::numeric_limits<double>::infinity(), std::vector<T>());
+    }
+
+    template<typename T, typename W>
+    std::tuple<std::unordered_map<unsigned int, std::unordered_map<unsigned int, double>>, std::unordered_map<unsigned int, std::unordered_map<unsigned int, unsigned int>>> UndirectedGraph<T, W>::floydWarshall() const
+    {
+        std::unordered_map<unsigned int, std::unordered_map<unsigned int, double>> Distance;
+        std::unordered_map<unsigned int, std::unordered_map<unsigned int, unsigned int>> Next;
+
+        // Initialization stage.
+        for(const std::pair<unsigned int, std::vector<Node<W>>> &edge_list : this->_ADJACENCY_LIST_)
+        {
+            for(const std::pair<unsigned int, std::vector<Node<W>>> &edge_list2 : this->_ADJACENCY_LIST_)
+            {
+                // Diagonal entries are zero(even if they have self loops).
+                if(edge_list.first == edge_list2.first)
+                    Distance[edge_list.first][edge_list2.first] = 0;
+                else
+                    Distance[edge_list.first][edge_list2.first] = std::numeric_limits<double>::infinity();
+                Next[edge_list.first][edge_list2.first] = 0;
+            }
+        }
+
+        for(const std::pair<unsigned int, std::vector<Node<W>>> &edge_list : this->_ADJACENCY_LIST_)
+        {
+            for(const Node<W> &node : edge_list.second)
+            {
+                if(edge_list.first != node.vertex)
+                    Distance[edge_list.first][node.vertex] = node.weight;
+                Next[edge_list.first][node.vertex] = node.vertex;
+            }
+        }
+
+        // Execute Floyd-Warshall Algorithm.
+        for(const std::pair<unsigned int, T> &k : this->_id_to_node_) // k = 0 to V
+            for(const std::pair<unsigned int, T> &i : this->_id_to_node_) // i = 0 to V
+                for(const std::pair<unsigned int, T> &j : this->_id_to_node_) // j = 0 to V
+                    if(Distance[i.first][k.first] + Distance[k.first][j.first] < Distance[i.first][j.first])
+                    {
+                        Distance[i.first][j.first] = Distance[i.first][k.first] + Distance[k.first][j.first];
+                        Next[i.first][j.first] = Next[i.first][k.first];
+                    }
+
+        // Execute Floyd-Warshall Algorithm a second time to detect negative cycles.
+        for(const std::pair<unsigned int, T> &k : this->_id_to_node_) // k = 0 to V
+            for(const std::pair<unsigned int, T> &i : this->_id_to_node_) // i = 0 to V
+                for(const std::pair<unsigned int, T> &j : this->_id_to_node_) // j = 0 to V
+                    if(Distance[i.first][k.first] + Distance[k.first][j.first] < Distance[i.first][j.first])
+                    {
+                        Distance[i.first][j.first] = std::numeric_limits<double>::infinity() * -1;
+                        Next[i.first][j.first] = 0;
+                    }
+
+        return std::tuple<std::unordered_map<unsigned int, std::unordered_map<unsigned int, double>>, std::unordered_map<unsigned int, std::unordered_map<unsigned int, unsigned int>>>(Distance, Next);
     }
 }
 
