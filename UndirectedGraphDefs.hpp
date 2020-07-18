@@ -321,6 +321,17 @@ namespace Graph
     }
 
     template<typename T, typename W>
+    void UndirectedGraph<T, W>::clear()
+    {
+        this->_ADJACENCY_LIST_.clear();
+        this->_id_to_node_.clear();
+        this->_node_to_id_.clear();
+        this->isNegWeighted = false;
+        this->isWeighted = false;
+        this->_id_ = 1;
+    }
+
+    template<typename T, typename W>
     bool UndirectedGraph<T, W>::addVertex(T vertex)
     {
         try
@@ -806,6 +817,112 @@ namespace Graph
             }
         }
     }
+
+    template<typename T, typename W>
+    std::vector<std::pair<T, T>> UndirectedGraph<T, W>::getCutEdges() const
+    {
+        unsigned int id = 0;
+        std::vector<std::pair<T, T>> Bridges;
+        std::unordered_set<unsigned int> Visited;
+        std::unordered_map<unsigned int, unsigned int> Ids;
+        std::unordered_map<unsigned int, unsigned int> Low;
+
+        for(const std::pair<unsigned int, T> &vertex : this->_id_to_node_)
+            if(Visited.find(vertex.first) == Visited.end())
+                getCutEdgesUtil(vertex.first, 0, id, Bridges, Visited, Ids, Low);
+        
+        return Bridges;
+    }
+
+    template<typename T, typename W>
+    void UndirectedGraph<T, W>::getCutEdgesUtil(unsigned int current, unsigned int parent, unsigned int &id, std::vector<std::pair<T, T>> &Bridges, std::unordered_set<unsigned int> &Visited, std::unordered_map<unsigned int, unsigned int> &Ids, std::unordered_map<unsigned int, unsigned int> &Low) const
+    {
+        Visited.insert(current);
+        Ids[current] = Low[current] = id++;
+
+        for(const Node<W> &node : this->_ADJACENCY_LIST_.at(current))
+        {
+            unsigned int child = node.vertex;
+
+            // The edge leads back to parent in DFS tree(in undirected graph).
+            if(child == parent) continue;
+            
+            // Visited[child] = false - The edge is part of DFS tree.
+            if(Visited.find(child) == Visited.end())
+            {
+                getCutEdgesUtil(child, current, id, Bridges, Visited, Ids, Low);
+                
+                // Relaxation while recursive callback(propagating the low-link values). 
+                Low[current] = std::min(Low[current], Low[child]);
+                
+                // Finding the bridges - There is no back-edge from 'child' to any of the ancestors, including to 'current'.
+                if(Low[child] > Ids[current])
+                    Bridges.push_back(std::pair<T, T>(this->_id_to_node_.at(current), this->_id_to_node_.at(child)));
+            }
+            // Visited[child] = true && child ≠ parent - The edge is back edge to one of the ancestors.
+            else
+                // Updating the low-link values using back-edges.
+                Low[current] = std::min(Low[current], Ids[child]);
+        }
+    }
+
+    template<typename T, typename W>
+    std::vector<T> UndirectedGraph<T, W>::getCutVertices() const
+    {
+        unsigned int id = 0;
+        std::vector<T> ArtPoints;
+        std::unordered_set<unsigned int> Visited;
+        std::unordered_map<unsigned int, unsigned int> Ids;
+        std::unordered_map<unsigned int, unsigned int> Low;
+
+        for(const std::pair<unsigned int, T> &vertex : this->_id_to_node_)
+            if(Visited.find(vertex.first) == Visited.end())
+                getCutVerticesUtil(id, ArtPoints, Visited, Ids, Low, vertex.first, 0);
+        
+        return ArtPoints;
+    }
+
+    template<typename T, typename W>
+    void UndirectedGraph<T, W>::getCutVerticesUtil(unsigned int &id, std::vector<T> &ArtPoints, std::unordered_set<unsigned int> &Visited, std::unordered_map<unsigned int, unsigned int> &Ids, std::unordered_map<unsigned int, unsigned int> &Low, unsigned int current, unsigned int parent) const
+    {
+        Visited.insert(current);
+        Ids[current] = Low[current] = id++;
+
+        int rootNodeOutgoingEdgeCount = 0;
+
+        for(const Node<W> &node : this->_ADJACENCY_LIST_.at(current))
+        {
+            unsigned int child = node.vertex;
+
+            // The edge leads back to parent in DFS tree(in undirected graph).
+            if(current == parent) continue;
+
+            // Visited[child] = false - The edge is part of DFS tree.
+            if(Visited.find(child) == Visited.end())
+            {
+                getCutVerticesUtil(id, ArtPoints, Visited, Ids, Low, child, current);
+
+                // Relaxation while recursive callback(propagating the low-link values). 
+                Low[current] = std::min(Low[current], Low[child]);
+
+                // Finding the articulation points - There is no back-edge from 'child' to any of the ancestors(back-edge to 'current' is allowed).
+                if(Low[child] >= Ids[current] && parent != 0)
+                    ArtPoints.push_back(this->_id_to_node_.at(current));
+                
+                rootNodeOutgoingEdgeCount++;
+            }
+            // Visited[child] = true && child ≠ parent - The edge is back-edge to one of the ancestors.
+            else
+                // Updating the low-link values using back-edges.
+                Low[current] = std::min(Low[current], Ids[child]);
+            
+        }
+
+        // If the parent node in this call is the root node && and has more than one outgoing edges - it is an articulation point.
+        if(parent == 0 && rootNodeOutgoingEdgeCount > 1)
+            ArtPoints.push_back(this->_id_to_node_.at(current));
+    }
+
 
     template<typename T, typename W>
     bool UndirectedGraph<T, W>::isCyclic() const

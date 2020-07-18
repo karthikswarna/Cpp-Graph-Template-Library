@@ -81,6 +81,8 @@ namespace Graph
              */
             // Swaps the internal data structures of the given graphs.
             void swap(UndirectedGraph &);
+            // Clears the container.
+            void clear();
 
             // Given an object, adds it to the graph, if it doesn't exist already.
             bool addVertex(T);
@@ -138,6 +140,11 @@ namespace Graph
             // Returns the shortest path for all pairs of vertices.
             std::unordered_map<T, std::unordered_map<T, std::vector<T>>> allPairsShortestPaths() const;
 
+            // Returns a vector of pairs containing cut edges.
+            std::vector<std::pair<T, T>> getCutEdges() const;
+            // Returns a vector containing cut vertices.
+            std::vector<T> getCutVertices() const;
+
             // Returns true of the graph contains a cycle.
             bool isCyclic() const;
 
@@ -174,6 +181,8 @@ namespace Graph
             const_edge_iterator cend(int) const;
 
         private:
+            void getCutEdgesUtil(unsigned int, unsigned int, unsigned int &, std::vector<std::pair<T, T>> &, std::unordered_set<unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, std::unordered_map<unsigned int, unsigned int> &) const;
+            void getCutVerticesUtil(unsigned int &, std::vector<T> &, std::unordered_set<unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, unsigned int, unsigned int) const;
             bool isCyclicUtil(unsigned int, std::unordered_set<unsigned int> &, unsigned int) const;
             /*
              *  SHORTEST PATH RELATED FUNCTIONS
