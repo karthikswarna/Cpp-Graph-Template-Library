@@ -61,6 +61,7 @@ namespace Graph
             std::pair<int, int> getDegree(T) const;
         
         private:
+            using UndirectedGraph<T, W>::getConnectedComponents;
             // Utility Function used for topoligical sort.
             unsigned int DFSUtil(unsigned int, unsigned int, std::unordered_set<unsigned int> &, std::vector<T> &) const;
             // Utility function for finding cycles in directed graph.

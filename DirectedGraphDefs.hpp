@@ -150,8 +150,8 @@ namespace Graph
         {
             for(const std::tuple<T, T, W> &e : edges)
             {
-                T vertex1 = std::get<2>(e);
-                T vertex2 = std::get<2>(e);
+                T vertex1 = std::get<0>(e);
+                T vertex2 = std::get<1>(e);
                 W weight = std::get<2>(e);
 
                 // If vertex1 is not previously there, add it to the list of nodes.
