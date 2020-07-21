@@ -89,24 +89,24 @@ namespace Graph
             // Given a list of objects, adds each of them to the graph, if it doesn't exist already.
             bool addVertices(const std::vector<T> &);
             // Given two objects, adds the edge between them to the graph, if it doesn't exist already.
-            bool addEdge(T, T, W weight = 1);
+            virtual bool addEdge(T, T, W weight = 1);
             // Given a list of pair of objects, adds each edge to the graph, if it doesn't exist already.
-            bool addEdges(const std::vector<std::pair<T, T>> &);
+            virtual bool addEdges(const std::vector<std::pair<T, T>> &);
             // Given a list of tuple of objects along with weights, adds each edge to the graph, if it doesn't exist already.
-            bool addEdges(const std::vector<std::tuple<T, T, W>> &);
+            virtual bool addEdges(const std::vector<std::tuple<T, T, W>> &);
             
             // Given an object, removes it and its edges from the graph, if it exists.
             bool removeVertex(T);
             // Given a list of objects, removes each of them and its edges from the graph, if it exists.
             bool removeVertices(const std::vector<T> &);
             // Given two objects, removes all edges present between them from the graph, if any exists.
-            bool removeEdge(T, T);
+            virtual bool removeEdge(T, T);
             // Given a list of pair of objects, removes all edges between each them from the graph, if any exists.
-            bool removeEdges(const std::vector<std::pair<T, T>> &);
+            virtual bool removeEdges(const std::vector<std::pair<T, T>> &);
             // Given two objects and weight, removes the specified edge from the graph, if it exists.
-            bool removeEdge(T, T, W);
+            virtual bool removeEdge(T, T, W);
             // Given a list of tuple of vertices and weights, removes each specified edge from the graph, if it exists.
-            bool removeEdges(const std::vector<std::tuple<T, T, W>> &);
+            virtual bool removeEdges(const std::vector<std::tuple<T, T, W>> &);
 
 
             /*
@@ -144,9 +144,11 @@ namespace Graph
             std::vector<std::pair<T, T>> getCutEdges() const;
             // Returns a vector containing cut vertices.
             std::vector<T> getCutVertices() const;
+            // Returns a vector of vectors, where each vector contains vertices of a connected component.
+            std::vector<std::vector<T>> getConnectedComponents() const;
 
             // Returns true of the graph contains a cycle.
-            bool isCyclic() const;
+            virtual bool isCyclic() const;
 
             // Prints the Adjacency list of the graph.
             void printGraph() const;

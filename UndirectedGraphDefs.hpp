@@ -923,6 +923,47 @@ namespace Graph
             ArtPoints.push_back(this->_id_to_node_.at(current));
     }
 
+    template<typename T, typename W>
+    std::vector<std::vector<T>> UndirectedGraph<T, W>::getConnectedComponents() const
+    {
+        std::queue<unsigned int> Q;
+        std::unordered_set<unsigned int> Visited;
+        std::vector<std::vector<T>> ConnectedComponents;
+
+        // For each connected component.
+        for(const std::pair<unsigned int, T> &vertex : this->_id_to_node_)
+        {
+            if(Visited.find(vertex.first) == Visited.end())
+            {
+                std::vector<T> Component;
+                Component.push_back(this->_id_to_node_.at(vertex.first));
+                Visited.insert(vertex.first);
+                Q.push(vertex.first);
+                
+                // Find all vertices in the component.
+                while(!Q.empty())
+                {
+                    unsigned int top = Q.front();
+                    Q.pop();
+
+                    for(const Node<W> &node : this->_ADJACENCY_LIST_.at(top))
+                    {
+                        if(Visited.find(node.vertex) == Visited.end())
+                        {
+                            Component.push_back(this->_id_to_node_.at(node.vertex));
+                            Visited.insert(node.vertex);
+                            Q.push(node.vertex);
+                        }
+                    }
+                }
+
+                ConnectedComponents.push_back(Component);
+            }
+        }
+
+        return ConnectedComponents;
+    }
+
 
     template<typename T, typename W>
     bool UndirectedGraph<T, W>::isCyclic() const
