@@ -299,6 +299,67 @@ namespace Graph
         }
     }
 
+    template<typename T, typename W>
+    std::vector<std::vector<T>> DirectedGraph<T, W>::getStronglyConnectedComponents() const
+    {
+        unsigned int id = 0;
+        std::stack<unsigned int> S;
+        std::vector<std::vector<T>> SCC;
+        std::unordered_set<unsigned int> onStack;
+        std::unordered_map<unsigned int, unsigned int> Ids; // This also acts as 'Visited' array.
+        std::unordered_map<unsigned int, unsigned int> Low;
+
+        // A SCC is a subtree in a DFS tree. So, start DFS for every tree in DFS forest to find all SCC's.
+        for(const std::pair<unsigned int, T> &vertex : this->_id_to_node_)
+            if(Ids.find(vertex.first) == Ids.end())
+                getSCCUtil(vertex.first, id, S, onStack, Ids, Low, SCC);
+            
+        return SCC;
+    }
+
+    template<typename T, typename W>
+    void DirectedGraph<T, W>::getSCCUtil(unsigned int current, unsigned int id, std::stack<unsigned int> &S, std::unordered_set<unsigned int> &onStack, std::unordered_map<unsigned int, unsigned int> &Ids, std::unordered_map<unsigned int, unsigned int> &Low, std::vector<std::vector<T>> &SCC) const
+    {
+        // As soon as a node is visited, push it onto the stack and assign it an id and a low-link value.
+        S.push(current);
+        onStack.insert(current);
+        Ids[current] = Low[current] = id++;
+
+        // Loop through all the neighbours of the current node.
+        for(const Node<W> &next : this->_ADJACENCY_LIST_.at(current))
+        {
+            // Do DFS for unvisited nodes.
+            if(Ids.find(next.vertex) == Ids.end())
+                getSCCUtil(next.vertex, id, S, onStack, Ids, Low, SCC);
+            
+            // If the 'next' is on the stack, it means that there is a path from 'next' to 'current' which we used to visit 'current'. But now there is also a path from 'current' to 'next'.
+            // So, 'current', 'next' belong to same SCC. This step allows low-link values to propagate throughout cycles.
+            if(onStack.find(next.vertex) != onStack.end())
+                Low[current] = std::min(Low[current], Low[next.vertex]);
+        }
+
+        // If the low-link value is equal to the id for a node, it is the start of a SCC.
+        if(Ids[current] == Low[current])
+        {
+            // Finding the component by popping off the stack until the start node(current).
+            std::vector<T> Component;
+            while(true)
+            {
+                unsigned int top = S.top();
+                S.pop();
+
+                Component.push_back(this->_id_to_node_.at(top));
+                onStack.erase(top);
+                Low[top] = Ids[current];
+                if(top == current) 
+                {
+                    SCC.push_back(Component);
+                    break;
+                }
+            }
+        }
+    }
+
     // template<typename T, typename W>
     // bool UndirectedGraph<T, W>::isCyclic() const
     // {
@@ -345,7 +406,7 @@ namespace Graph
         
         while(whiteSet.size() > 0)
         {
-            if(isCyclic(*whiteSet.begin(), whiteSet, greySet, blackSet))
+            if(isCyclicUtil(*whiteSet.begin(), whiteSet, greySet, blackSet))
                 return true;
         }
         
@@ -353,7 +414,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool DirectedGraph<T, W>::isCyclic(unsigned int start, std::unordered_set<unsigned int> &whiteSet, std::unordered_set<unsigned int> &greySet, std::unordered_set<unsigned int> &blackSet) const
+    bool DirectedGraph<T, W>::isCyclicUtil(unsigned int start, std::unordered_set<unsigned int> &whiteSet, std::unordered_set<unsigned int> &greySet, std::unordered_set<unsigned int> &blackSet) const
     {
         greySet.insert(start);
         whiteSet.erase(start);
@@ -364,7 +425,7 @@ namespace Graph
                 continue;
             if(greySet.find(dest.vertex) != greySet.end())
                 return true;
-            if(whiteSet.find(dest.vertex) != whiteSet.end() && isCyclic(dest.vertex, whiteSet, greySet, blackSet))
+            if(whiteSet.find(dest.vertex) != whiteSet.end() && isCyclicUtil(dest.vertex, whiteSet, greySet, blackSet))
                 return true;
         }
 

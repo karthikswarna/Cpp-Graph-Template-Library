@@ -52,6 +52,9 @@ namespace Graph
             /*
              * CONST MEMBER FUNCTIONS
              */
+            // Returns a vector of vectors, where each vector contains vertices of a strongly connected component.
+            std::vector<std::vector<T>> getStronglyConnectedComponents() const;
+
             // Returns true if the graph is cyclic, else returns false.
             bool isCyclic() const;
             // Returns the topological srt of the directed graph.
@@ -61,11 +64,16 @@ namespace Graph
             std::pair<int, int> getDegree(T) const;
         
         private:
+            using UndirectedGraph<T, W>::getCutEdges;
+            using UndirectedGraph<T, W>::getCutVertices;
             using UndirectedGraph<T, W>::getConnectedComponents;
+
+            // Utility Function used for finding Strongly Connected Components.
+            void getSCCUtil(unsigned int, unsigned int, std::stack<unsigned int> &, std::unordered_set<unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, std::vector<std::vector<T>> &) const;
             // Utility Function used for topoligical sort.
             unsigned int DFSUtil(unsigned int, unsigned int, std::unordered_set<unsigned int> &, std::vector<T> &) const;
             // Utility function for finding cycles in directed graph.
-            bool isCyclic(unsigned int, std::unordered_set<unsigned int> &, std::unordered_set<unsigned int> &, std::unordered_set<unsigned int> &) const;
+            bool isCyclicUtil(unsigned int, std::unordered_set<unsigned int> &, std::unordered_set<unsigned int> &, std::unordered_set<unsigned int> &) const;
     };
 }
 

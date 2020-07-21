@@ -1,6 +1,7 @@
 #ifndef UNDIRECTED_GRAPH_H
 #define UNDIRECTED_GRAPH_H
 
+#include <stack>
 #include <queue>
 #include <tuple>
 #include <vector>
