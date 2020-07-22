@@ -1056,6 +1056,62 @@ namespace Graph
         return ConnectedComponents;
     }
 
+    template<typename W>
+    struct minTupleComp
+    { 
+        constexpr bool operator()(const std::tuple<unsigned int, unsigned int, W> &a, const std::tuple<unsigned int, unsigned int, W> &b) const noexcept
+        {
+            return std::get<2>(a) > std::get<2>(b);
+        }
+    };
+
+    // Lazy implementation of the Prim's algorithm for finding MST in an undirected graph.
+    template<typename T, typename W>
+    std::vector<std::tuple<T, T, W>> UndirectedGraph<T, W>::getMinimumSpanningTree() const
+    {
+        typedef std::tuple<unsigned int, unsigned int, W> tuple;
+
+        std::priority_queue<tuple, std::vector<tuple>, minTupleComp<W>> Q;
+        int maxEdges = this->_id_to_node_.size() - 1;
+        std::unordered_set<unsigned int> mstVertices;                       // Set of vertices which are added in the MST.
+        std::vector<std::tuple<T, T, W>> mstEdges;                          // Vector of edges added in the MST.
+        int edgeCount = 0;                                                  // Tracks the number of edges included in the MST.
+        
+        // Initialization phase. Add 's' to the MST vertex set and add all its edges into the priority queue.
+        unsigned int s = (this->_id_to_node_.begin())->first;
+        mstVertices.insert(s);
+        for(const Node<W> &node : this->_ADJACENCY_LIST_.at(s))
+            if(node.vertex != s)                                            // Simplified check for vertices not in mstVertices set.
+                Q.push(tuple(s, node.vertex, node.weight));
+
+        // Loop until a MST is found or priority queue is empty.
+        while(!Q.empty() && edgeCount != maxEdges)
+        {
+            tuple edge = Q.top();
+            s = std::get<1>(edge);
+            Q.pop();
+
+            // If the current vertex is already in MST, discard this tuple.
+            if(mstVertices.find(s) != mstVertices.end())
+                continue;
+
+            // Add the edge to the MST.
+            mstEdges.push_back( std::tuple<T, T, W>( this->_id_to_node_.at(std::get<0>(edge)), this->_id_to_node_.at(std::get<1>(edge)), std::get<2>(edge) ) );
+            edgeCount++;
+
+            // Add the current vertex to MST & push all the edges of current vertex into priority queue. 
+            mstVertices.insert(s);
+            for(const Node<W> &node : this->_ADJACENCY_LIST_.at(s))
+                if(mstVertices.find(node.vertex) == mstVertices.end())
+                    Q.push(tuple(s, node.vertex, node.weight));
+        }
+
+        if(edgeCount != maxEdges)
+            return std::vector<std::tuple<T, T, W>>();
+
+        return mstEdges;
+    }
+
     // There is a cycle in a graph only if there is a back-edge present in the graph.
     template<typename T, typename W>
     bool UndirectedGraph<T, W>::isCyclic() const

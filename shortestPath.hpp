@@ -195,7 +195,7 @@ namespace Graph
         return Paths;
     }
 
-    struct comp
+    struct minPairComp
     { 
         constexpr bool operator()(const std::pair<unsigned int, double> &a, const std::pair<unsigned int, double> &b) const noexcept
         {
@@ -210,7 +210,7 @@ namespace Graph
         typedef std::pair<unsigned int, double> pair;
 
         std::unordered_set<unsigned int> Explored;
-        std::priority_queue<pair, std::vector<pair>, comp> Q;   // (vertex - distance) priority queue.
+        std::priority_queue<pair, std::vector<pair>, minPairComp> Q;   // (vertex - distance) priority queue.
         std::unordered_map<unsigned int, double> Distance;      // (vertex - bestDistance) mapping.
         std::unordered_map<unsigned int, unsigned int> Prev;    // (child - parent) mapping.
         double minDist = 0;

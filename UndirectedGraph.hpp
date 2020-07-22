@@ -150,6 +150,9 @@ namespace Graph
             // Returns a vector of vectors, where each vector contains vertices of a connected component.
             virtual std::vector<std::vector<T>> getConnectedComponents() const;
 
+            // Returns a vector of edges which are a part of a minimum spanning tree. If MST doesn't exist, returns an empty vector.
+            virtual std::vector<std::tuple<T, T, W>> getMinimumSpanningTree() const;
+
             // Returns true of the graph contains a cycle.
             virtual bool isCyclic() const;
 
