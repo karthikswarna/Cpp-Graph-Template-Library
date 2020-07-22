@@ -82,7 +82,7 @@ namespace Graph
 
             if(weight < 0)
                 this->isNegWeighted = true;
-            if(weight > 1)
+            if(weight != 1)
                 this->isWeighted = true;
 
             std::vector<Node<W>> edge_list = this->_ADJACENCY_LIST_.at(id1);
@@ -177,7 +177,7 @@ namespace Graph
 
                 if(weight < 0)
                     this->isNegWeighted = true;
-                if(weight > 1)
+                if(weight != 1)
                     this->isWeighted = true;
 
                 std::vector<Node<W>> edge_list = this->_ADJACENCY_LIST_.at(id1);
@@ -201,11 +201,14 @@ namespace Graph
         {
             if(this->_node_to_id_.find(vertex1) != this->_node_to_id_.end() && this->_node_to_id_.find(vertex2) != this->_node_to_id_.end())
             {
+                // Remove vertex2 from adjacency list of vertex1.
                 std::vector<Node<W>> &edge_list1 = this->_ADJACENCY_LIST_.at(this->_node_to_id_.at(vertex1));
                 if(std::find(edge_list1.begin(), edge_list1.end(), this->_node_to_id_.at(vertex2)) != edge_list1.end())
                 {
                     edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), this->_node_to_id_.at(vertex2)), edge_list1.end());
                 }
+
+                this->checkGraph();
             }
 
             return true;
@@ -229,11 +232,14 @@ namespace Graph
     
                 if(this->_node_to_id_.find(vertex1) != this->_node_to_id_.end() && this->_node_to_id_.find(vertex2) != this->_node_to_id_.end())
                 {
+                    // Remove vertex2 from adjacency list of vertex1.
                     std::vector<Node<W>> &edge_list1 = this->_ADJACENCY_LIST_.at(this->_node_to_id_.at(vertex1));
                     if(std::find(edge_list1.begin(), edge_list1.end(), this->_node_to_id_.at(vertex2)) != edge_list1.end())
                     {
                         edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), this->_node_to_id_.at(vertex2)), edge_list1.end());
                     }
+
+                    this->checkGraph();
                 }
             }
 
@@ -253,11 +259,14 @@ namespace Graph
         {
             if(this->_node_to_id_.find(vertex1) != this->_node_to_id_.end() && this->_node_to_id_.find(vertex2) != this->_node_to_id_.end())
             {
+                // Remove vertex2 from adjacency list of vertex1.
                 std::vector<Node<W>> &edge_list1 = this->_ADJACENCY_LIST_.at(this->_node_to_id_.at(vertex1));
                 if(std::find(edge_list1.begin(), edge_list1.end(), Node<W>{this->_node_to_id_.at(vertex2), weight}) != edge_list1.end())
                 {
                     edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), Node<W>{this->_node_to_id_.at(vertex2), weight}), edge_list1.end());
                 }
+
+                this->checkGraph();
             }
 
             return true;
@@ -282,11 +291,14 @@ namespace Graph
 
                 if(this->_node_to_id_.find(vertex1) != this->_node_to_id_.end() && this->_node_to_id_.find(vertex2) != this->_node_to_id_.end())
                 {
+                    // Remove vertex2 from adjacency list of vertex1.
                     std::vector<Node<W>> &edge_list1 = this->_ADJACENCY_LIST_.at(this->_node_to_id_.at(vertex1));
                     if(std::find(edge_list1.begin(), edge_list1.end(), Node<W>{this->_node_to_id_.at(vertex2), weight}) != edge_list1.end())
                     {
                         edge_list1.erase(std::remove(edge_list1.begin(), edge_list1.end(), Node<W>{this->_node_to_id_.at(vertex2), weight}), edge_list1.end());
                     }
+
+                    this->checkGraph();
                 }
             }
 
@@ -360,6 +372,7 @@ namespace Graph
         }
     }
 
+    // Different method for finding cycles in a directed graph. This is based on detecting back-edges in DFS forest.
     // template<typename T, typename W>
     // bool UndirectedGraph<T, W>::isCyclic() const
     // {
@@ -374,23 +387,28 @@ namespace Graph
     // }
 
     // template<typename T, typename W>
-    // bool UndirectedGraph<T, W>::isCyclicUtil(unsigned int start, std::unordered_set<unsigned int> &Visited, std::unordered_set<unsigned int> &recStack) const
+    // bool UndirectedGraph<T, W>::isCyclicUtil(unsigned int current, std::unordered_set<unsigned int> &Visited, std::unordered_set<unsigned int> &recStack) const
     // {
-    //     if(Visited.find(start) == Visited.end())
+    //     if(Visited.find(current) == Visited.end())
     //     {
-    //         Visited.insert(start);
-    //         recStack.insert(start);
+    //         Visited.insert(current);
+    //         recStack.insert(current);
 
-    //         for(const Node<W> &node : this->_ADJACENCY_LIST_.at(start))
+    //         for(const Node<W> &child : this->_ADJACENCY_LIST_.at(current))
     //         {
-    //             if(Visited.find(node.vertex) == Visited.end() && isCyclicUtil(node.vertex, Visited, recStack))
-    //                 return true;
-    //             else if(recStack.find(node.vertex) != recStack.end())
+    //             if(Visited.find(child.vertex) == Visited.end())
+    //                 if(isCyclicUtil(child.vertex, Visited, recStack))
+    //                     return true;
+    //             // Indicates a back-edge. If the 'child' is already on recStack, we have a path from 'child' to 'current'. Now, we found an edge from 'current' to 'child' - Cycle! 
+    //             // Visited[child] = true && recStack[child] = true -- Back-edge
+    //             // Visited[child] = true && recStack[child] = false -- 'child' belongs to different DFS tree.
+    //             else if(recStack.find(child.vertex) != recStack.end())
     //                 return true;
     //         }
     //     }
 
-    //     recStack.erase(start);
+    //     // Remove vertices belonging to different DFS tree.
+    //     recStack.erase(current);
     //     return false;
     // }
 

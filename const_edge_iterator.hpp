@@ -16,10 +16,10 @@ namespace Graph
             const std::unordered_map<unsigned int, T> &_id_to_node_ptr_;
             const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator _last_it_;
 
-            const_edge_iterator(const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator &,   // Gives iterator to the adjacency list(current iterator).
-                                const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator &,   // Gives iterator to the last non-empty mapping in the container(used in bound checking, this is constant for a Graph if not new edges are added).
-                                const std::unordered_map<unsigned int, T> &,                                            // Reference to the _id_to_node_ in the Graph.
-                                const typename std::vector<Node<W>>::const_iterator & = (std::vector<Node<W>>{}).begin());                        // Gives iterator to the vector in the current mapping.
+            const_edge_iterator(const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator &,    // Gives iterator to the adjacency list(current iterator).
+                                const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator &,    // Gives iterator to the last non-empty mapping in the container(used in bound checking, this is constant for a Graph if not new edges are added).
+                                const std::unordered_map<unsigned int, T> &,                                                // Reference to the _id_to_node_ in the Graph.
+                                const typename std::vector<Node<W>>::const_iterator & = (std::vector<Node<W>>{}).begin());  // Gives iterator to the vector in the current mapping.
 
         public:
             /*

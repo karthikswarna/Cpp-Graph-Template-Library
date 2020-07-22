@@ -52,6 +52,8 @@ namespace Graph
             bool isWeighted{false};
             unsigned int _id_{1};       // 0 can be used as sentinel.
 
+            // Function to check whether the graph is still weighted/negative Weighted.
+            void checkGraph();
         public:
             /*
              *  SPECIAL MEMBER FUNCTIONS
@@ -142,11 +144,11 @@ namespace Graph
             std::unordered_map<T, std::unordered_map<T, std::vector<T>>> allPairsShortestPaths() const;
 
             // Returns a vector of pairs containing cut edges.
-            std::vector<std::pair<T, T>> getCutEdges() const;
+            virtual std::vector<std::pair<T, T>> getCutEdges() const;
             // Returns a vector containing cut vertices.
-            std::vector<T> getCutVertices() const;
+            virtual std::vector<T> getCutVertices() const;
             // Returns a vector of vectors, where each vector contains vertices of a connected component.
-            std::vector<std::vector<T>> getConnectedComponents() const;
+            virtual std::vector<std::vector<T>> getConnectedComponents() const;
 
             // Returns true of the graph contains a cycle.
             virtual bool isCyclic() const;
@@ -159,7 +161,8 @@ namespace Graph
             int getDegree(T) const;
             // Returns true if the graph is empty, else false. 
             bool empty() const;
-
+            // Utility function to check the (id - node) mapping.
+            void printMap() const;
 
             /*
              *  ITERATOR-RELATED FUNCTIONS
@@ -187,6 +190,7 @@ namespace Graph
             void getCutEdgesUtil(unsigned int, unsigned int, unsigned int &, std::vector<std::pair<T, T>> &, std::unordered_set<unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, std::unordered_map<unsigned int, unsigned int> &) const;
             void getCutVerticesUtil(unsigned int &, std::vector<T> &, std::unordered_set<unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, unsigned int, unsigned int) const;
             bool isCyclicUtil(unsigned int, std::unordered_set<unsigned int> &, unsigned int) const;
+
             /*
              *  SHORTEST PATH RELATED FUNCTIONS
              *  If two valid vertices are given, returns (bestDistancesMap, bestPathsMap) tuple,

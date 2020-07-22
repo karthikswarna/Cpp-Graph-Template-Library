@@ -16,10 +16,10 @@ namespace Graph
             std::unordered_map<unsigned int, T> &_id_to_node_ptr_;
             const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::iterator _last_it_;
 
-            edge_iterator(const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::iterator &,   // Gives iterator to the adjacency list(current iterator).
-                          const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::iterator &,   // Gives iterator to the last non-empty mapping in the container(used in bound checking, this is constant for a Graph if not new edges are added).
-                          std::unordered_map<unsigned int, T> &,                                            // Reference to the _id_to_node_ in the Graph.
-                          const typename std::vector<Node<W>>::iterator & = (std::vector<Node<W>>{}).begin());                        // Gives iterator to the vector in the current mapping.
+            edge_iterator(const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::iterator &,    // Gives iterator to the adjacency list(current iterator).
+                          const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::iterator &,    // Gives iterator to the last non-empty mapping in the container(used in bound checking, this is constant for a Graph if not new edges are added).
+                          std::unordered_map<unsigned int, T> &,                                                // Reference to the _id_to_node_ in the Graph.
+                          const typename std::vector<Node<W>>::iterator & = (std::vector<Node<W>>{}).begin());  // Gives iterator to the vector in the current mapping.
 
         public:
             /*
@@ -177,7 +177,7 @@ namespace Graph
     template<typename T, typename W>
     std::pair<T*, T*> UndirectedGraph<T, W>::edge_iterator::operator->() const
     {
-        return std::pair<T&, T&>( &(_id_to_node_ptr_.at(_it_->first)), &(_id_to_node_ptr_.at(_it2_->vertex)) );
+        return std::pair<T*, T*>( &(_id_to_node_ptr_.at(_it_->first)), &(_id_to_node_ptr_.at(_it2_->vertex)) );
     }
 }
 

@@ -203,6 +203,7 @@ namespace Graph
         }
     };
 
+    // Lazy implementation of Dijkstra. We should use Indexed Priority Queue for Eager implementation.
     template<typename T, typename W>
     std::tuple<std::unordered_map<unsigned int, double>, std::unordered_map<unsigned int, unsigned int>> UndirectedGraph<T, W>::Dijkstra(unsigned int start, unsigned int end) const
     {
@@ -215,6 +216,7 @@ namespace Graph
         double minDist = 0;
         double newDist = 0;
 
+        // Initialization phase.
         for(const std::pair<unsigned int, T> &vertices : this->_id_to_node_)
             Distance[vertices.first] = std::numeric_limits<double>::infinity();
 
@@ -453,7 +455,7 @@ namespace Graph
         std::unordered_map<unsigned int, std::unordered_map<unsigned int, double>> Distance;
         std::unordered_map<unsigned int, std::unordered_map<unsigned int, unsigned int>> Next;
 
-        // Initialization stage.
+        // Initialization phase.
         for(const std::pair<unsigned int, std::vector<Node<W>>> &edge_list : this->_ADJACENCY_LIST_)
         {
             for(const std::pair<unsigned int, std::vector<Node<W>>> &edge_list2 : this->_ADJACENCY_LIST_)
@@ -467,6 +469,7 @@ namespace Graph
             }
         }
 
+        // Distance[i][j] = adj_mat[i][j], next[i][j] = j.
         for(const std::pair<unsigned int, std::vector<Node<W>>> &edge_list : this->_ADJACENCY_LIST_)
         {
             for(const Node<W> &node : edge_list.second)
