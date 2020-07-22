@@ -13,17 +13,17 @@ namespace Graph
         private:
             typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator _it_;
             typename std::vector<Node<W>>::const_iterator _it2_;
-            const std::unordered_map<unsigned int, T> &_id_to_node_ptr_;
-            const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator _last_it_;
+            std::unordered_map<unsigned int, T> const* _id_to_node_ptr_;                                                    // Pointer to const map.
+            typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator _last_it_;
 
             const_edge_iterator(const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator &,    // Gives iterator to the adjacency list(current iterator).
                                 const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator &,    // Gives iterator to the last non-empty mapping in the container(used in bound checking, this is constant for a Graph if not new edges are added).
-                                const std::unordered_map<unsigned int, T> &,                                                // Reference to the _id_to_node_ in the Graph.
+                                std::unordered_map<unsigned int, T> const*,                                                 // Reference to the _id_to_node_ in the Graph.
                                 const typename std::vector<Node<W>>::const_iterator & = (std::vector<Node<W>>{}).begin());  // Gives iterator to the vector in the current mapping.
 
         public:
             /*
-             * SPECIAL MEMBER FUNCTIONS
+             *  SPECIAL MEMBER FUNCTIONS
              */
             // Default constructor.
             const_edge_iterator();
@@ -42,7 +42,7 @@ namespace Graph
 
 
              /*
-             * ADDITIONAL CONSTRUCTORS
+             *  ADDITIONAL CONSTRUCTORS
              */
             // Copy constructor with edge_iterator.
             const_edge_iterator(const typename UndirectedGraph<T, W>::edge_iterator &);
@@ -51,7 +51,7 @@ namespace Graph
 
 
             /*
-             * OVERLOADED OPERATORS
+             *  OVERLOADED OPERATORS
              */
             // Overloaded equality operator.
             bool operator==(const const_edge_iterator &) const;
@@ -66,6 +66,12 @@ namespace Graph
             const std::pair<const T&, const T&> operator*() const;
             // Overloaded member selection operator.
             const std::pair<const T*, const T*> operator->() const;
+
+            /*
+             *  MEMBER FUNCTIONS
+             */
+            // Function used to GET the weight of an edge pointed by the iterator.
+            W getWeight() const;
     };
 
     template<typename T, typename W>
@@ -99,20 +105,28 @@ namespace Graph
 
     template<typename T, typename W>
     UndirectedGraph<T, W>::const_edge_iterator::const_edge_iterator(const_edge_iterator &&rhs) noexcept
-        : _it_ ( std::move(rhs._it_) )
+        : _it_ ( std::move(rhs._it_) )                          // Member-wise move phase.
         , _it2_ ( std::move(rhs._it2_) )
         , _last_it_ ( std::move(rhs._last_it_) )
-        , _id_to_node_ptr_ ( rhs._id_to_node_ptr_ )
+        , _id_to_node_ptr_ ( std::move(rhs._id_to_node_ptr_) )
     {
+        rhs._id_to_node_ptr_ = nullptr;                         // Reset phase.
     }
     
     template<typename T, typename W>
     typename UndirectedGraph<T, W>::const_edge_iterator& UndirectedGraph<T, W>::const_edge_iterator::operator=(const_edge_iterator &&rhs) noexcept
     {
+        // Clean-up phase is not required(as the pointer is not used for ownership of memory).
+    
+        // Member-wise move phase.
         _it_ = std::move(rhs._it_);
         _it2_ = std::move(rhs._it2_);
         _last_it_ = std::move(rhs._last_it_);
-        _id_to_node_ptr_ = rhs._id_to_node_ptr_;
+        _id_to_node_ptr_ = std::move(rhs._id_to_node_ptr_);
+
+        // Reset phase.
+        rhs._id_to_node_ptr_ = nullptr;
+
         return *this;
     }
 
@@ -127,21 +141,23 @@ namespace Graph
 
     template<typename T, typename W>
     UndirectedGraph<T, W>::const_edge_iterator::const_edge_iterator(typename UndirectedGraph<T, W>::edge_iterator &&rhs) noexcept
-        : _it_ ( std::move(rhs._it_) )
+        : _it_ ( std::move(rhs._it_) )                          // Member-wise move phase.
         , _it2_ ( std::move(rhs._it2_) )
         , _last_it_ ( std::move(rhs._last_it_) )
-        , _id_to_node_ptr_ ( rhs._id_to_node_ptr_ )
+        , _id_to_node_ptr_ ( std::move(rhs._id_to_node_ptr_) )
     {
+        rhs._id_to_node_ptr_ = nullptr;                         // Reset phase.
     }
 
     // Private constructor. Only move version is sufficienct.
     template<typename T, typename W>
-    UndirectedGraph<T, W>::const_edge_iterator::const_edge_iterator(const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator &rhs, const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator &rhs3, const std::unordered_map<unsigned int, T> &_id_to_node_, const typename std::vector<Node<W>>::const_iterator &rhs2)
-        : _it_ ( std::move(rhs) )
+    UndirectedGraph<T, W>::const_edge_iterator::const_edge_iterator(const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator &rhs, const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator &rhs3, std::unordered_map<unsigned int, T> const* _id_to_node_, const typename std::vector<Node<W>>::const_iterator &rhs2)
+        : _it_ ( std::move(rhs) )                       // Member-wise move phase.
         , _it2_ ( std::move(rhs2) )
         , _last_it_ ( std::move(rhs3) )
-        , _id_to_node_ptr_ ( _id_to_node_ )
+        , _id_to_node_ptr_ ( std::move(_id_to_node_) )
     {
+        _id_to_node_ = nullptr;                         // Reset phase.
     }
 
     template<typename T, typename W>
@@ -197,13 +213,19 @@ namespace Graph
     template<typename T, typename W>
     const std::pair<const T&, const T&> UndirectedGraph<T, W>::const_edge_iterator::operator*() const
     {
-        return std::make_pair( _id_to_node_ptr_.at(_it_->first), _id_to_node_ptr_.at(_it2_->vertex) );
+        return std::make_pair( _id_to_node_ptr_->at(_it_->first), _id_to_node_ptr_->at(_it2_->vertex) );
     }
 
     template<typename T, typename W>
     const std::pair<const T*, const T*> UndirectedGraph<T, W>::const_edge_iterator::operator->() const
     {
-        return std::make_pair( &(_id_to_node_ptr_.at(_it_->first)), &(_id_to_node_ptr_.at(_it2_->vertex)) );
+        return std::make_pair( &(_id_to_node_ptr_->at(_it_->first)), &(_id_to_node_ptr_->at(_it2_->vertex)) );
+    }
+
+    template<typename T, typename W>
+    W UndirectedGraph<T, W>::const_edge_iterator::getWeight() const
+    {
+        return _it2_->weight;
     }
 }
 

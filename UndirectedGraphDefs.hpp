@@ -11,37 +11,37 @@ namespace Graph
     template<typename T, typename W>
     typename UndirectedGraph<T, W>::node_iterator UndirectedGraph<T, W>::begin()
     {
-        return node_iterator(this->_ADJACENCY_LIST_.begin(), this->_id_to_node_);
+        return node_iterator(this->_ADJACENCY_LIST_.begin(), &this->_id_to_node_, &this->_node_to_id_);
     }
 
     template<typename T, typename W>
     typename UndirectedGraph<T, W>::node_iterator UndirectedGraph<T, W>::end()
     {
-        return node_iterator(this->_ADJACENCY_LIST_.end(), this->_id_to_node_);
+        return node_iterator(this->_ADJACENCY_LIST_.end(), &this->_id_to_node_, &this->_node_to_id_);
     }
 
     template<typename T, typename W>
     typename UndirectedGraph<T, W>::const_node_iterator UndirectedGraph<T, W>::begin() const
     {
-        return const_node_iterator(this->_ADJACENCY_LIST_.begin(), this->_id_to_node_);
+        return const_node_iterator(this->_ADJACENCY_LIST_.begin(), &this->_id_to_node_);
     }
 
     template<typename T, typename W>
     typename UndirectedGraph<T, W>::const_node_iterator UndirectedGraph<T, W>::cbegin() const
     {
-        return const_node_iterator(this->_ADJACENCY_LIST_.cbegin(), this->_id_to_node_);
+        return const_node_iterator(this->_ADJACENCY_LIST_.cbegin(), &this->_id_to_node_);
     }
 
     template<typename T, typename W>
     typename UndirectedGraph<T, W>::const_node_iterator UndirectedGraph<T, W>::end() const
     {
-        return const_node_iterator(this->_ADJACENCY_LIST_.end(), this->_id_to_node_);
+        return const_node_iterator(this->_ADJACENCY_LIST_.end(), &this->_id_to_node_);
     }
 
     template<typename T, typename W>
     typename UndirectedGraph<T, W>::const_node_iterator UndirectedGraph<T, W>::cend() const
     {
-        return const_node_iterator(this->_ADJACENCY_LIST_.cend(), this->_id_to_node_);
+        return const_node_iterator(this->_ADJACENCY_LIST_.cend(), &this->_id_to_node_);
     }
     
     template<typename T, typename W>
@@ -49,7 +49,7 @@ namespace Graph
     {
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::iterator it = this->_ADJACENCY_LIST_.begin();
         if(this->empty())
-            return edge_iterator(it, it, this->_id_to_node_);
+            return edge_iterator(it, it, &this->_id_to_node_);
 
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::iterator first_it = it;    // This has the first non-empty mapping.
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::iterator last_it = it;     // This has the last non-empty mapping.
@@ -72,7 +72,7 @@ namespace Graph
             ++it;
         }
 
-        return edge_iterator(first_it, last_it, this->_id_to_node_, first_it->second.begin());
+        return edge_iterator(first_it, last_it, &this->_id_to_node_, first_it->second.begin());
     }
 
     template<typename T, typename W>
@@ -80,7 +80,7 @@ namespace Graph
     {
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::iterator it = this->_ADJACENCY_LIST_.begin();
         if(this->empty())
-            return edge_iterator(it, it, this->_id_to_node_);
+            return edge_iterator(it, it, &this->_id_to_node_);
 
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::iterator first_it = it;
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::iterator last_it = it;
@@ -102,7 +102,7 @@ namespace Graph
             ++it;
         }
 
-        return edge_iterator(last_it, last_it, this->_id_to_node_, last_it->second.end());
+        return edge_iterator(last_it, last_it, &this->_id_to_node_, last_it->second.end());
     }
 
     template<typename T, typename W>
@@ -110,7 +110,7 @@ namespace Graph
     {
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator it = this->_ADJACENCY_LIST_.begin();
         if(this->empty())
-            return const_edge_iterator(it, it, this->_id_to_node_);
+            return const_edge_iterator(it, it, &this->_id_to_node_);
 
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator first_it = it;    // This has the first non-empty mapping.
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator last_it = it;     // This has the last non-empty mapping.
@@ -133,7 +133,7 @@ namespace Graph
             ++it;
         }
 
-        return const_edge_iterator(first_it, last_it, this->_id_to_node_, first_it->second.begin());
+        return const_edge_iterator(first_it, last_it, &this->_id_to_node_, first_it->second.begin());
     }
 
     template<typename T, typename W>
@@ -141,7 +141,7 @@ namespace Graph
     {
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator it = this->_ADJACENCY_LIST_.begin();
         if(this->empty())
-            return const_edge_iterator(it, it, this->_id_to_node_);
+            return const_edge_iterator(it, it, &this->_id_to_node_);
 
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator first_it = it;
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator last_it = it;
@@ -163,7 +163,7 @@ namespace Graph
             ++it;
         }
 
-        return const_edge_iterator(last_it, last_it, this->_id_to_node_, last_it->second.end());
+        return const_edge_iterator(last_it, last_it, &this->_id_to_node_, last_it->second.end());
     }
 
     template<typename T, typename W>
@@ -171,7 +171,7 @@ namespace Graph
     {
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator it = this->_ADJACENCY_LIST_.cbegin();
         if(this->empty())
-            return const_edge_iterator(it, it, this->_id_to_node_);
+            return const_edge_iterator(it, it, &this->_id_to_node_);
 
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator first_it = it;    // This has the first non-empty mapping.
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator last_it = it;     // This has the last non-empty mapping.
@@ -194,7 +194,7 @@ namespace Graph
             ++it;
         }
 
-        return const_edge_iterator(first_it, last_it, this->_id_to_node_, first_it->second.cbegin());
+        return const_edge_iterator(first_it, last_it, &this->_id_to_node_, first_it->second.cbegin());
     }
 
     template<typename T, typename W>
@@ -202,7 +202,7 @@ namespace Graph
     {
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator it = this->_ADJACENCY_LIST_.cbegin();
         if(this->empty())
-            return const_edge_iterator(it, it, this->_id_to_node_);
+            return const_edge_iterator(it, it, &this->_id_to_node_);
 
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator first_it = it;
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator last_it = it;
@@ -224,7 +224,7 @@ namespace Graph
             ++it;
         }
 
-        return const_edge_iterator(last_it, last_it, this->_id_to_node_, last_it->second.cend());
+        return const_edge_iterator(last_it, last_it, &this->_id_to_node_, last_it->second.cend());
     }
 
     /*

@@ -12,9 +12,9 @@ namespace Graph
 
         private:
             typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator _it_;
-            const std::unordered_map<unsigned int, T> &_id_to_node_ptr_;
+            std::unordered_map<unsigned int, T> const* _id_to_node_ptr_;        // Pointer to a constant map.
 
-            const_node_iterator(const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator &, const std::unordered_map<unsigned int, T> &);
+            const_node_iterator(const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator &, std::unordered_map<unsigned int, T> const*);
 
         public:
             /*
@@ -90,16 +90,23 @@ namespace Graph
     
     template<typename T, typename W>
     UndirectedGraph<T, W>::const_node_iterator::const_node_iterator(const_node_iterator &&rhs) noexcept
-        : _it_ ( std::move(rhs._it_) )
-        , _id_to_node_ptr_ ( rhs._id_to_node_ptr_ )
+        : _it_ ( std::move(rhs._it_) )                          // Member-wise move phase.
+        , _id_to_node_ptr_ ( std::move(rhs._id_to_node_ptr_) )
     {
+        rhs._id_to_node_ptr_ = nullptr;                         // Reset phase.
     }
 
     template<typename T, typename W>
     typename UndirectedGraph<T, W>::const_node_iterator& UndirectedGraph<T, W>::const_node_iterator::operator=(const_node_iterator &&rhs) noexcept
     {
+        // Clean-up phase: Need not delete _id_to_node_ptr_ before moving, because it represents only a relationship(not ownership).
+        
+        // Member-wise move phase.
         _it_ = std::move(rhs._it_);
-        _id_to_node_ptr_ = rhs._id_to_node_ptr_;
+        _id_to_node_ptr_ = std::move(rhs._id_to_node_ptr_);
+        
+        // Reset phase.
+        rhs._id_to_node_ptr_ = nullptr;
         return *this;
     }
 
@@ -113,16 +120,18 @@ namespace Graph
     template<typename T, typename W>
     UndirectedGraph<T, W>::const_node_iterator::const_node_iterator(typename UndirectedGraph<T, W>::node_iterator &&rhs) noexcept
         : _it_ ( std::move(rhs._it_) )
-        , _id_to_node_ptr_ ( rhs._id_to_node_ptr_ )
+        , _id_to_node_ptr_ ( std::move(rhs._id_to_node_ptr_) )
     {
+        rhs._id_to_node_ptr_ = nullptr;
     }
 
     // Private constructor. Only move version is sufficienct.
     template<typename T, typename W>
-    UndirectedGraph<T, W>::const_node_iterator::const_node_iterator(const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator &rhs, const std::unordered_map<unsigned int, T> &_id_to_node_)
-        : _it_ ( std::move(rhs) )
-        , _id_to_node_ptr_ ( _id_to_node_ )
+    UndirectedGraph<T, W>::const_node_iterator::const_node_iterator(const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator &rhs, std::unordered_map<unsigned int, T> const* _id_to_node_)
+        : _it_ ( std::move(rhs) )                       // Member-wise move phase.
+        , _id_to_node_ptr_ ( std::move(_id_to_node_) )
     {
+        _id_to_node_ = nullptr;                         // Reset phase.
     }
 
     template<typename T, typename W>
@@ -155,13 +164,13 @@ namespace Graph
     template<typename T, typename W>
     const T& UndirectedGraph<T, W>::const_node_iterator::operator*() const
     {
-        return _id_to_node_ptr_.at(_it_->first);
+        return _id_to_node_ptr_->at(_it_->first);
     }
 
     template<typename T, typename W>
     const T* UndirectedGraph<T, W>::const_node_iterator::operator->() const
     {
-        return &(_id_to_node_ptr_.at(_it_->first));
+        return &(_id_to_node_ptr_->at(_it_->first));
     }
 }
 
