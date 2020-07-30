@@ -149,9 +149,13 @@ namespace Graph
             virtual std::vector<T> getCutVertices() const;
             // Returns a vector of vectors, where each vector contains vertices of a connected component.
             virtual std::vector<std::vector<T>> getConnectedComponents() const;
-
             // Returns a vector of edges which are a part of a minimum spanning tree. If MST doesn't exist, returns an empty vector.
             virtual std::vector<std::tuple<T, T, W>> getMinimumSpanningTree() const;
+
+            // Returns 0 -> Not Eulerian, 1 -> Semi-Eulerian, 2 -> Eulerian.
+            virtual int isEulerian() const;
+            // Returns a vector containing the Eulerian path. If the graph is not Eulerian, returns an empty vector.
+            virtual std::vector<T> getEulerianPath() const;
 
             // Returns true of the graph contains a cycle.
             virtual bool isCyclic() const;
@@ -192,6 +196,8 @@ namespace Graph
         private:
             void getCutEdgesUtil(unsigned int, unsigned int, unsigned int &, std::vector<std::pair<T, T>> &, std::unordered_set<unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, std::unordered_map<unsigned int, unsigned int> &) const;
             void getCutVerticesUtil(unsigned int &, std::vector<T> &, std::unordered_set<unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, unsigned int, unsigned int) const;
+            virtual void getEulerianPathUtil(unsigned int, std::unordered_map<unsigned int, std::vector<Node<W>>> &, std::unordered_map<unsigned int, unsigned int> &, std::vector<T> &) const;
+            virtual void isEulerianUtil(unsigned int, std::unordered_set<unsigned int> &) const;
             bool isCyclicUtil(unsigned int, std::unordered_set<unsigned int> &, unsigned int) const;
 
             /*

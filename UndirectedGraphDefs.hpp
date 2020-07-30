@@ -1069,6 +1069,10 @@ namespace Graph
     template<typename T, typename W>
     std::vector<std::tuple<T, T, W>> UndirectedGraph<T, W>::getMinimumSpanningTree() const
     {
+        // Empty spanning tree for empty graph.
+        if(this->_ADJACENCY_LIST_.size() == 0)
+            return std::vector<std::tuple<T, T, W>>();
+
         typedef std::tuple<unsigned int, unsigned int, W> tuple;
 
         std::priority_queue<tuple, std::vector<tuple>, minTupleComp<W>> Q;
@@ -1226,5 +1230,6 @@ namespace Graph
 }
 
 #include "shortestPath.hpp"
+#include "UndirectedEulerian.hpp"
 
 #endif

@@ -453,7 +453,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    std::vector<T> DirectedGraph<T, W>::TopologicalSort() const
+    std::vector<T> DirectedGraph<T, W>::getTopologicalSort() const
     {
         if(isCyclic())
             return std::vector<T>{};
@@ -464,19 +464,19 @@ namespace Graph
 
         for(const std::pair<unsigned int, std::vector<Node<W>>> &edges : this->_ADJACENCY_LIST_)
             if(Visited.find(edges.first) == Visited.end())
-                index = DFSUtil(index, edges.first, Visited, TopSort);
+                index = getTopologicalSortUtil(index, edges.first, Visited, TopSort);
 
         return TopSort;
     }
 
     template<typename T, typename W>
-    unsigned int DirectedGraph<T, W>::DFSUtil(unsigned int index, unsigned int start, std::unordered_set<unsigned int> &Visited, std::vector<T> &TopSort) const
+    unsigned int DirectedGraph<T, W>::getTopologicalSortUtil(unsigned int index, unsigned int start, std::unordered_set<unsigned int> &Visited, std::vector<T> &TopSort) const
     {
         Visited.insert(start);
 
         for(Node<W> dest : this->_ADJACENCY_LIST_.at(start))
             if(Visited.find(dest.vertex) == Visited.end())
-                index = DFSUtil(index, dest.vertex, Visited, TopSort);
+                index = getTopologicalSortUtil(index, dest.vertex, Visited, TopSort);
 
         TopSort[index] = this->_id_to_node_.at(start);
         return index - 1;
@@ -503,5 +503,7 @@ namespace Graph
             return std::pair<int, int>(-1, -1);
     }
 }
+
+#include "DirectedEulerian.hpp"
 
 #endif
