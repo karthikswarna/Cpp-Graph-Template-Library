@@ -1,7 +1,7 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include "UndirectedGraph.hpp"
-#include "DirectedGraph.hpp"
+#include "undirected_graph.hpp"
+#include "directed_graph.hpp"
 
 #endif

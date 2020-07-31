@@ -1,12 +1,12 @@
 #ifndef SHORTEST_PATH_H
 #define SHORTEST_PATH_H
 
-#include "UndirectedGraph.hpp"
+#include "undirected_graph.hpp"
 
 namespace Graph
 {
     template<typename T, typename W>
-    double UndirectedGraph<T, W>::shortestDistance(T start, T end) const
+    double undirected_graph<T, W>::shortestDistance(T start, T end) const
     {
         // If any of the vertex is invalid, return -1.
         if(this->_node_to_id_.find(start) == this->_node_to_id_.end() || this->_node_to_id_.find(end) == this->_node_to_id_.end())
@@ -26,7 +26,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    std::vector<T> UndirectedGraph<T, W>::shortestPath(T start, T end) const
+    std::vector<T> undirected_graph<T, W>::shortestPath(T start, T end) const
     {
         // If any of the vertex is invalid, return empty vector.
         if(this->_node_to_id_.find(start) == this->_node_to_id_.end() || this->_node_to_id_.find(end) == this->_node_to_id_.end())
@@ -66,7 +66,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    std::unordered_map<T, double> UndirectedGraph<T, W>::singleSourceShortestDistances(unsigned int start) const
+    std::unordered_map<T, double> undirected_graph<T, W>::singleSourceShortestDistances(unsigned int start) const
     {
         // If the vertex is invalid, return empty map.
         if(this->_node_to_id_.find(start) == this->_node_to_id_.end())
@@ -94,7 +94,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    std::unordered_map<T, std::vector<T>> UndirectedGraph<T, W>::singleSourceShortestPaths(unsigned int start) const
+    std::unordered_map<T, std::vector<T>> undirected_graph<T, W>::singleSourceShortestPaths(unsigned int start) const
     {
         // If the vertex is invalid, return empty map.
         if(this->_node_to_id_.find(start) == this->_node_to_id_.end())
@@ -140,7 +140,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    std::unordered_map<T, std::unordered_map<T, double>> UndirectedGraph<T, W>::allPairsShortestDistances() const
+    std::unordered_map<T, std::unordered_map<T, double>> undirected_graph<T, W>::allPairsShortestDistances() const
     {
         std::unordered_map<unsigned int, std::unordered_map<unsigned int, double>> Distance;
         std::unordered_map<T, std::unordered_map<T, double>> DistanceFinal;
@@ -154,7 +154,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    std::unordered_map<T, std::unordered_map<T, std::vector<T>>> UndirectedGraph<T, W>::allPairsShortestPaths() const
+    std::unordered_map<T, std::unordered_map<T, std::vector<T>>> undirected_graph<T, W>::allPairsShortestPaths() const
     {
         std::unordered_map<unsigned int, std::unordered_map<unsigned int, unsigned int>> Next;
         std::unordered_map<unsigned int, std::unordered_map<unsigned int, double>> Distance;
@@ -205,7 +205,7 @@ namespace Graph
 
     // Lazy implementation of Dijkstra. We should use Indexed Priority Queue for Eager implementation.
     template<typename T, typename W>
-    std::tuple<std::unordered_map<unsigned int, double>, std::unordered_map<unsigned int, unsigned int>> UndirectedGraph<T, W>::Dijkstra(unsigned int start, unsigned int end) const
+    std::tuple<std::unordered_map<unsigned int, double>, std::unordered_map<unsigned int, unsigned int>> undirected_graph<T, W>::Dijkstra(unsigned int start, unsigned int end) const
     {
         typedef std::pair<unsigned int, double> pair;
 
@@ -262,7 +262,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    std::tuple<std::unordered_map<unsigned int, double>, std::unordered_map<unsigned int, unsigned int>> UndirectedGraph<T, W>::bellmanFord(unsigned int start) const
+    std::tuple<std::unordered_map<unsigned int, double>, std::unordered_map<unsigned int, unsigned int>> undirected_graph<T, W>::bellmanFord(unsigned int start) const
     {
         std::unordered_map<unsigned int, double> Distance;
         std::unordered_map<unsigned int, unsigned int> Prev;
@@ -308,7 +308,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    std::tuple<std::unordered_map<unsigned int, double>, std::unordered_map<unsigned int, unsigned int>> UndirectedGraph<T, W>::breadthFirstSearch(unsigned int start) const
+    std::tuple<std::unordered_map<unsigned int, double>, std::unordered_map<unsigned int, unsigned int>> undirected_graph<T, W>::breadthFirstSearch(unsigned int start) const
     {
         std::unordered_set<unsigned int> Visited;
         std::unordered_map<unsigned int, double> Distance;
@@ -343,7 +343,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    std::tuple<double, std::vector<T>> UndirectedGraph<T, W>::bidirectionalSearch(unsigned int start, unsigned int end) const
+    std::tuple<double, std::vector<T>> undirected_graph<T, W>::bidirectionalSearch(unsigned int start, unsigned int end) const
     {
         typedef std::pair<unsigned int, double> pair;
 
@@ -450,7 +450,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    std::tuple<std::unordered_map<unsigned int, std::unordered_map<unsigned int, double>>, std::unordered_map<unsigned int, std::unordered_map<unsigned int, unsigned int>>> UndirectedGraph<T, W>::floydWarshall() const
+    std::tuple<std::unordered_map<unsigned int, std::unordered_map<unsigned int, double>>, std::unordered_map<unsigned int, std::unordered_map<unsigned int, unsigned int>>> undirected_graph<T, W>::floydWarshall() const
     {
         std::unordered_map<unsigned int, std::unordered_map<unsigned int, double>> Distance;
         std::unordered_map<unsigned int, std::unordered_map<unsigned int, unsigned int>> Next;

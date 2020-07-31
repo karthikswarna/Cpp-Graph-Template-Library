@@ -1,19 +1,19 @@
 #ifndef DIRECTED_EULERIAN_H
 #define DIRECTED_EULERIAN_H
 
-#include "DirectedGraph.hpp"
+#include "directed_graph.hpp"
 
 namespace Graph
 {
     template<typename T, typename W>
-    int DirectedGraph<T, W>::isEulerian() const
+    int directed_graph<T, W>::isEulerian() const
     {
         // Empty graph is Eulerian.
         if(this->_ADJACENCY_LIST_.empty())
             return 2;
 
         // STEP-1: Check if all non-zero degree vertices are connected. If the number of SCC's with more than one node > 1 then graph is disconnected => not Eulerian. 
-        std::vector<std::vector<T>> SCC = getStronglyConnectedComponents();
+        std::vector<std::vector<T>> SCC = stronglyConnectedComponents();
         if(std::count_if(SCC.begin(), SCC.end(), [](std::vector<T> CC){ return (CC.size() > 1); }) > 1)
             return 0;
 
@@ -62,7 +62,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    std::vector<T> DirectedGraph<T, W>::getEulerianPath() const
+    std::vector<T> directed_graph<T, W>::eulerianPath() const
     {
         // Return empty Eulerian Path for empty graph.
         if(this->_ADJACENCY_LIST_.empty())
@@ -127,7 +127,7 @@ namespace Graph
 
         // DFS.
         std::vector<T> Path;
-        getEulerianPathUtil(start, Outdegree, Path);
+        eulerianPathUtil(start, Outdegree, Path);
         std::reverse(Path.begin(), Path.end());
 
         // If the graph is disconnected, Eulerian path doesn't exist.
@@ -138,7 +138,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    void DirectedGraph<T, W>::getEulerianPathUtil(unsigned int current, std::unordered_map<unsigned int, unsigned int> &Outdegree, std::vector<T> &Path) const
+    void directed_graph<T, W>::eulerianPathUtil(unsigned int current, std::unordered_map<unsigned int, unsigned int> &Outdegree, std::vector<T> &Path) const
     {
         unsigned int &degree = Outdegree.at(current);
         unsigned int next_edge;
@@ -148,7 +148,7 @@ namespace Graph
         {
             // Select the next unvisited edge, mark it visited, continue DFS from that edge.
             next_edge = this->_ADJACENCY_LIST_.at(current).at(--degree).vertex;
-            getEulerianPathUtil(next_edge, Outdegree, Path);
+            eulerianPathUtil(next_edge, Outdegree, Path);
         }
 
         // Add current node to the solution.

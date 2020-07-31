@@ -1,7 +1,7 @@
 #ifndef UNDIRECTED_GRAPH_DEFINITIONS_H
 #define UNDIRECTED_GRAPH_DEFINITIONS_H
 
-#include "UndirectedGraph.hpp"
+#include "undirected_graph.hpp"
 
 namespace Graph
 {
@@ -9,43 +9,43 @@ namespace Graph
      * ITERATOR RELATED FUNCTIONS
      */
     template<typename T, typename W>
-    typename UndirectedGraph<T, W>::node_iterator UndirectedGraph<T, W>::begin()
+    typename undirected_graph<T, W>::node_iterator undirected_graph<T, W>::begin()
     {
         return node_iterator(this->_ADJACENCY_LIST_.begin(), &this->_id_to_node_, &this->_node_to_id_);
     }
 
     template<typename T, typename W>
-    typename UndirectedGraph<T, W>::node_iterator UndirectedGraph<T, W>::end()
+    typename undirected_graph<T, W>::node_iterator undirected_graph<T, W>::end()
     {
         return node_iterator(this->_ADJACENCY_LIST_.end(), &this->_id_to_node_, &this->_node_to_id_);
     }
 
     template<typename T, typename W>
-    typename UndirectedGraph<T, W>::const_node_iterator UndirectedGraph<T, W>::begin() const
+    typename undirected_graph<T, W>::const_node_iterator undirected_graph<T, W>::begin() const
     {
         return const_node_iterator(this->_ADJACENCY_LIST_.begin(), &this->_id_to_node_);
     }
 
     template<typename T, typename W>
-    typename UndirectedGraph<T, W>::const_node_iterator UndirectedGraph<T, W>::cbegin() const
+    typename undirected_graph<T, W>::const_node_iterator undirected_graph<T, W>::cbegin() const
     {
         return const_node_iterator(this->_ADJACENCY_LIST_.cbegin(), &this->_id_to_node_);
     }
 
     template<typename T, typename W>
-    typename UndirectedGraph<T, W>::const_node_iterator UndirectedGraph<T, W>::end() const
+    typename undirected_graph<T, W>::const_node_iterator undirected_graph<T, W>::end() const
     {
         return const_node_iterator(this->_ADJACENCY_LIST_.end(), &this->_id_to_node_);
     }
 
     template<typename T, typename W>
-    typename UndirectedGraph<T, W>::const_node_iterator UndirectedGraph<T, W>::cend() const
+    typename undirected_graph<T, W>::const_node_iterator undirected_graph<T, W>::cend() const
     {
         return const_node_iterator(this->_ADJACENCY_LIST_.cend(), &this->_id_to_node_);
     }
     
     template<typename T, typename W>
-    typename UndirectedGraph<T, W>::edge_iterator UndirectedGraph<T, W>::begin(int)
+    typename undirected_graph<T, W>::edge_iterator undirected_graph<T, W>::begin(int)
     {
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::iterator it = this->_ADJACENCY_LIST_.begin();
         if(this->empty())
@@ -76,7 +76,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    typename UndirectedGraph<T, W>::edge_iterator UndirectedGraph<T, W>::end(int)
+    typename undirected_graph<T, W>::edge_iterator undirected_graph<T, W>::end(int)
     {
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::iterator it = this->_ADJACENCY_LIST_.begin();
         if(this->empty())
@@ -106,7 +106,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    typename UndirectedGraph<T, W>::const_edge_iterator UndirectedGraph<T, W>::begin(int) const
+    typename undirected_graph<T, W>::const_edge_iterator undirected_graph<T, W>::begin(int) const
     {
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator it = this->_ADJACENCY_LIST_.begin();
         if(this->empty())
@@ -137,7 +137,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    typename UndirectedGraph<T, W>::const_edge_iterator UndirectedGraph<T, W>::end(int) const
+    typename undirected_graph<T, W>::const_edge_iterator undirected_graph<T, W>::end(int) const
     {
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator it = this->_ADJACENCY_LIST_.begin();
         if(this->empty())
@@ -167,7 +167,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    typename UndirectedGraph<T, W>::const_edge_iterator UndirectedGraph<T, W>::cbegin(int) const
+    typename undirected_graph<T, W>::const_edge_iterator undirected_graph<T, W>::cbegin(int) const
     {
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator it = this->_ADJACENCY_LIST_.cbegin();
         if(this->empty())
@@ -198,7 +198,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    typename UndirectedGraph<T, W>::const_edge_iterator UndirectedGraph<T, W>::cend(int) const
+    typename undirected_graph<T, W>::const_edge_iterator undirected_graph<T, W>::cend(int) const
     {
         typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator it = this->_ADJACENCY_LIST_.cbegin();
         if(this->empty())
@@ -231,12 +231,12 @@ namespace Graph
      * NON-ITERATOR RELATED FUNCTIONS
      */
     template<typename T, typename W>
-    UndirectedGraph<T, W>::UndirectedGraph() noexcept
+    undirected_graph<T, W>::undirected_graph() noexcept
     {
     }
 
     template<typename T, typename W>
-    UndirectedGraph<T, W>::~UndirectedGraph() noexcept 
+    undirected_graph<T, W>::~undirected_graph() noexcept 
     {
         this->_ADJACENCY_LIST_.clear();
         this->_id_to_node_.clear();
@@ -244,7 +244,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    UndirectedGraph<T, W>::UndirectedGraph(const UndirectedGraph &rhs) noexcept
+    undirected_graph<T, W>::undirected_graph(const undirected_graph &rhs) noexcept
         : _ADJACENCY_LIST_ ( rhs._ADJACENCY_LIST_ )
         , _id_to_node_ ( rhs._id_to_node_ )
         , _node_to_id_ (rhs._node_to_id_)
@@ -255,7 +255,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    UndirectedGraph<T, W>& UndirectedGraph<T, W>::operator=(const UndirectedGraph &rhs) noexcept
+    undirected_graph<T, W>& undirected_graph<T, W>::operator=(const undirected_graph &rhs) noexcept
     {
         this->_ADJACENCY_LIST_ = rhs._ADJACENCY_LIST_;
         this->_id_to_node_ = rhs._id_to_node_;
@@ -267,7 +267,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    UndirectedGraph<T, W>::UndirectedGraph(UndirectedGraph &&rhs) noexcept
+    undirected_graph<T, W>::undirected_graph(undirected_graph &&rhs) noexcept
         : _ADJACENCY_LIST_ ( std::move(rhs._ADJACENCY_LIST_) )
         , _id_to_node_ ( std::move(rhs._id_to_node_) )
         , _node_to_id_ ( std::move(rhs._node_to_id_) )
@@ -278,7 +278,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    UndirectedGraph<T, W>& UndirectedGraph<T, W>::operator=(UndirectedGraph &&rhs) noexcept
+    undirected_graph<T, W>& undirected_graph<T, W>::operator=(undirected_graph &&rhs) noexcept
     {
         this->_ADJACENCY_LIST_ = std::move(rhs._ADJACENCY_LIST_);
         this->_id_to_node_ = std::move(rhs._id_to_node_);
@@ -290,7 +290,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool UndirectedGraph<T, W>::operator==(const UndirectedGraph &rhs) const
+    bool undirected_graph<T, W>::operator==(const undirected_graph &rhs) const
     {
         return this->_ADJACENCY_LIST_ == rhs._ADJACENCY_LIST_
             && this->_id_to_node_ == rhs._id_to_node_
@@ -300,7 +300,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool UndirectedGraph<T, W>::operator!=(const UndirectedGraph &rhs) const
+    bool undirected_graph<T, W>::operator!=(const undirected_graph &rhs) const
     {
         return this->_ADJACENCY_LIST_ != rhs._ADJACENCY_LIST_
             || this->_id_to_node_ != rhs._id_to_node_
@@ -310,7 +310,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    void UndirectedGraph<T, W>::swap(UndirectedGraph &rhs)
+    void undirected_graph<T, W>::swap(undirected_graph &rhs)
     {
         this->_ADJACENCY_LIST_.swap(rhs._ADJACENCY_LIST_);
         this->_id_to_node_.swap(rhs._id_to_node_);
@@ -321,7 +321,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    void UndirectedGraph<T, W>::clear()
+    void undirected_graph<T, W>::clear()
     {
         this->_ADJACENCY_LIST_.clear();
         this->_id_to_node_.clear();
@@ -332,7 +332,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool UndirectedGraph<T, W>::addVertex(T vertex)
+    bool undirected_graph<T, W>::addVertex(T vertex)
     {
         try
         {
@@ -353,7 +353,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool UndirectedGraph<T, W>::addVertices(const std::vector<T> &vertices)
+    bool undirected_graph<T, W>::addVertices(const std::vector<T> &vertices)
     {
         try
         {
@@ -377,7 +377,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool UndirectedGraph<T, W>::addEdge(T vertex1, T vertex2, W weight)
+    bool undirected_graph<T, W>::addEdge(T vertex1, T vertex2, W weight)
     {
         try
         {
@@ -425,7 +425,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool UndirectedGraph<T, W>::addEdges(const std::vector<std::pair<T, T>> &edges)
+    bool undirected_graph<T, W>::addEdges(const std::vector<std::pair<T, T>> &edges)
     {
         try
         {
@@ -474,7 +474,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool UndirectedGraph<T, W>::addEdges(const std::vector<std::tuple<T, T, W>> &edges)
+    bool undirected_graph<T, W>::addEdges(const std::vector<std::tuple<T, T, W>> &edges)
     {
         try
         {
@@ -529,7 +529,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool UndirectedGraph<T, W>::removeVertex(T vertex)
+    bool undirected_graph<T, W>::removeVertex(T vertex)
     {
         try
         {
@@ -598,7 +598,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool UndirectedGraph<T, W>::removeVertices(const std::vector<T> &vertices)
+    bool undirected_graph<T, W>::removeVertices(const std::vector<T> &vertices)
     {
         try
         {
@@ -670,7 +670,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool UndirectedGraph<T, W>::removeEdge(T vertex1, T vertex2)
+    bool undirected_graph<T, W>::removeEdge(T vertex1, T vertex2)
     {
         try
         {
@@ -706,7 +706,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool UndirectedGraph<T, W>::removeEdges(const std::vector<std::pair<T, T>> &edges)
+    bool undirected_graph<T, W>::removeEdges(const std::vector<std::pair<T, T>> &edges)
     {
         try
         {
@@ -748,7 +748,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool UndirectedGraph<T, W>::removeEdge(T vertex1, T vertex2, W weight)
+    bool undirected_graph<T, W>::removeEdge(T vertex1, T vertex2, W weight)
     {
         try
         {
@@ -784,7 +784,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool UndirectedGraph<T, W>::removeEdges(const std::vector<std::tuple<T, T, W>> &edges)
+    bool undirected_graph<T, W>::removeEdges(const std::vector<std::tuple<T, T, W>> &edges)
     {
         try
         {
@@ -827,7 +827,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    void UndirectedGraph<T, W>::printDFS(unsigned int start, std::unordered_set<unsigned int> &Visited) const
+    void undirected_graph<T, W>::printDFS(unsigned int start, std::unordered_set<unsigned int> &Visited) const
     {
         Visited.insert(start);
         std::cout << this->_id_to_node_.at(start);
@@ -844,7 +844,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    void UndirectedGraph<T, W>::printDFS() const
+    void undirected_graph<T, W>::printDFS() const
     {
         std::cout << "DEPTH FIRST SEARCH\n";
 
@@ -860,7 +860,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    void UndirectedGraph<T, W>::printBFS(unsigned int start, std::unordered_set<unsigned int> &Visited) const
+    void undirected_graph<T, W>::printBFS(unsigned int start, std::unordered_set<unsigned int> &Visited) const
     {
         std::queue<unsigned int> Q;
         std::vector<unsigned int> path;
@@ -895,7 +895,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    void UndirectedGraph<T, W>::printBFS() const
+    void undirected_graph<T, W>::printBFS() const
     {
         std::cout << "BREADTH FIRST SEARCH" << '\n';
 
@@ -911,7 +911,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    std::vector<std::pair<T, T>> UndirectedGraph<T, W>::getCutEdges() const
+    std::vector<std::pair<T, T>> undirected_graph<T, W>::cutEdges() const
     {
         unsigned int id = 0;
         std::vector<std::pair<T, T>> Bridges;
@@ -921,13 +921,13 @@ namespace Graph
 
         for(const std::pair<unsigned int, T> &vertex : this->_id_to_node_)
             if(Visited.find(vertex.first) == Visited.end())
-                getCutEdgesUtil(vertex.first, 0, id, Bridges, Visited, Ids, Low);
+                cutEdgesUtil(vertex.first, 0, id, Bridges, Visited, Ids, Low);
         
         return Bridges;
     }
 
     template<typename T, typename W>
-    void UndirectedGraph<T, W>::getCutEdgesUtil(unsigned int current, unsigned int parent, unsigned int &id, std::vector<std::pair<T, T>> &Bridges, std::unordered_set<unsigned int> &Visited, std::unordered_map<unsigned int, unsigned int> &Ids, std::unordered_map<unsigned int, unsigned int> &Low) const
+    void undirected_graph<T, W>::cutEdgesUtil(unsigned int current, unsigned int parent, unsigned int &id, std::vector<std::pair<T, T>> &Bridges, std::unordered_set<unsigned int> &Visited, std::unordered_map<unsigned int, unsigned int> &Ids, std::unordered_map<unsigned int, unsigned int> &Low) const
     {
         Visited.insert(current);
         Ids[current] = Low[current] = id++;
@@ -942,7 +942,7 @@ namespace Graph
             // Visited[child] = false - The edge is part of DFS tree.
             if(Visited.find(child) == Visited.end())
             {
-                getCutEdgesUtil(child, current, id, Bridges, Visited, Ids, Low);
+                cutEdgesUtil(child, current, id, Bridges, Visited, Ids, Low);
                 
                 // Relaxation while recursive callback(propagating the low-link values). 
                 Low[current] = std::min(Low[current], Low[child]);
@@ -959,7 +959,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    std::vector<T> UndirectedGraph<T, W>::getCutVertices() const
+    std::vector<T> undirected_graph<T, W>::cutVertices() const
     {
         unsigned int id = 0;
         std::vector<T> ArtPoints;
@@ -969,13 +969,13 @@ namespace Graph
 
         for(const std::pair<unsigned int, T> &vertex : this->_id_to_node_)
             if(Visited.find(vertex.first) == Visited.end())
-                getCutVerticesUtil(id, ArtPoints, Visited, Ids, Low, vertex.first, 0);
+                cutVerticesUtil(id, ArtPoints, Visited, Ids, Low, vertex.first, 0);
         
         return ArtPoints;
     }
 
     template<typename T, typename W>
-    void UndirectedGraph<T, W>::getCutVerticesUtil(unsigned int &id, std::vector<T> &ArtPoints, std::unordered_set<unsigned int> &Visited, std::unordered_map<unsigned int, unsigned int> &Ids, std::unordered_map<unsigned int, unsigned int> &Low, unsigned int current, unsigned int parent) const
+    void undirected_graph<T, W>::cutVerticesUtil(unsigned int &id, std::vector<T> &ArtPoints, std::unordered_set<unsigned int> &Visited, std::unordered_map<unsigned int, unsigned int> &Ids, std::unordered_map<unsigned int, unsigned int> &Low, unsigned int current, unsigned int parent) const
     {
         Visited.insert(current);
         Ids[current] = Low[current] = id++;
@@ -992,7 +992,7 @@ namespace Graph
             // Visited[child] = false - The edge is part of DFS tree.
             if(Visited.find(child) == Visited.end())
             {
-                getCutVerticesUtil(id, ArtPoints, Visited, Ids, Low, child, current);
+                cutVerticesUtil(id, ArtPoints, Visited, Ids, Low, child, current);
 
                 // Relaxation while recursive callback(propagating the low-link values). 
                 Low[current] = std::min(Low[current], Low[child]);
@@ -1016,7 +1016,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    std::vector<std::vector<T>> UndirectedGraph<T, W>::getConnectedComponents() const
+    std::vector<std::vector<T>> undirected_graph<T, W>::connectedComponents() const
     {
         std::queue<unsigned int> Q;
         std::unordered_set<unsigned int> Visited;
@@ -1067,7 +1067,7 @@ namespace Graph
 
     // Lazy implementation of the Prim's algorithm for finding MST in an undirected graph.
     template<typename T, typename W>
-    std::vector<std::tuple<T, T, W>> UndirectedGraph<T, W>::getMinimumSpanningTree() const
+    std::vector<std::tuple<T, T, W>> undirected_graph<T, W>::minimumSpanningTree() const
     {
         // Empty spanning tree for empty graph.
         if(this->_ADJACENCY_LIST_.size() == 0)
@@ -1118,7 +1118,7 @@ namespace Graph
 
     // There is a cycle in a graph only if there is a back-edge present in the graph.
     template<typename T, typename W>
-    bool UndirectedGraph<T, W>::isCyclic() const
+    bool undirected_graph<T, W>::isCyclic() const
     {
         std::unordered_set<unsigned int> Visited;
 
@@ -1131,7 +1131,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool UndirectedGraph<T, W>::isCyclicUtil(unsigned int current, std::unordered_set<unsigned int> &Visited, unsigned int parent) const
+    bool undirected_graph<T, W>::isCyclicUtil(unsigned int current, std::unordered_set<unsigned int> &Visited, unsigned int parent) const
     {
         Visited.insert(current);
 
@@ -1149,7 +1149,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    void UndirectedGraph<T, W>::printGraph() const
+    void undirected_graph<T, W>::printGraph() const
     {
         std::cout << "ADJACENCY LIST" << '\n';
         for(const std::pair<unsigned int, std::vector<Node<W>>> &e : this->_ADJACENCY_LIST_)
@@ -1166,7 +1166,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    void UndirectedGraph<T, W>::printWeightedGraph() const
+    void undirected_graph<T, W>::printWeightedGraph() const
     {
         std::cout << "ADJACENCY LIST" << '\n';
         for(const std::pair<unsigned int, std::vector<Node<W>>> &e : this->_ADJACENCY_LIST_)
@@ -1183,7 +1183,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    int UndirectedGraph<T, W>::getDegree(T vertex) const
+    int undirected_graph<T, W>::degree(T vertex) const
     {
         if(this->_node_to_id_.find(vertex) != this->_node_to_id_.end())
             return this->_ADJACENCY_LIST_.at(this->_node_to_id_.at(vertex)).size();
@@ -1192,13 +1192,13 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool UndirectedGraph<T, W>::empty() const
+    bool undirected_graph<T, W>::empty() const
     {
         return this->_id_to_node_.empty();
     }
     
     template<typename T, typename W>
-    void UndirectedGraph<T, W>::printMap() const
+    void undirected_graph<T, W>::printMap() const
     {
         std::cout << "VERTEX MAP" << '\n';
         for(const std::pair<unsigned int, T> &e : this->_id_to_node_)
@@ -1208,7 +1208,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    void UndirectedGraph<T, W>::checkGraph()
+    void undirected_graph<T, W>::checkGraph()
     {
         // Finding whether the graph is still weighted/negative Weighted.
         bool stillWeighted = false;
@@ -1229,7 +1229,7 @@ namespace Graph
     }
 }
 
-#include "shortestPath.hpp"
-#include "UndirectedEulerian.hpp"
+#include "shortest_path.hpp"
+#include "undirected_eulerian.hpp"
 
 #endif

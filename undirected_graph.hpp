@@ -42,7 +42,7 @@ namespace Graph
     };
 
     template<typename T, typename W = int>
-    class UndirectedGraph
+    class undirected_graph
     {   
         protected:
             std::unordered_map<unsigned int, std::vector<Node<W>>> _ADJACENCY_LIST_;
@@ -59,31 +59,31 @@ namespace Graph
              *  SPECIAL MEMBER FUNCTIONS
              */
             // Default constructor.
-            UndirectedGraph() noexcept;
+            undirected_graph() noexcept;
             // Destructor.
-            ~UndirectedGraph() noexcept;
+            ~undirected_graph() noexcept;
             
             //Copy Constructor.
-            UndirectedGraph(const UndirectedGraph &) noexcept;
+            undirected_graph(const undirected_graph &) noexcept;
             // Copy assignment operator.
-            UndirectedGraph& operator=(const UndirectedGraph &) noexcept;
+            undirected_graph& operator=(const undirected_graph &) noexcept;
             
             // Move constructor.
-            UndirectedGraph(UndirectedGraph &&) noexcept;
+            undirected_graph(undirected_graph &&) noexcept;
             // Move assignment operator.
-            UndirectedGraph& operator=(UndirectedGraph &&) noexcept;
+            undirected_graph& operator=(undirected_graph &&) noexcept;
 
             // Overloaded equality operator.
-            bool operator==(const UndirectedGraph &) const;
+            bool operator==(const undirected_graph &) const;
             // Overloaded inequality operator.
-            bool operator!=(const UndirectedGraph &) const;
+            bool operator!=(const undirected_graph &) const;
 
 
             /*
              *  NON-CONST MEMBER FUNCTIONS
              */
             // Swaps the internal data structures of the given graphs.
-            void swap(UndirectedGraph &);
+            void swap(undirected_graph &);
             // Clears the container.
             void clear();
 
@@ -144,18 +144,18 @@ namespace Graph
             std::unordered_map<T, std::unordered_map<T, std::vector<T>>> allPairsShortestPaths() const;
 
             // Returns a vector of pairs containing cut edges.
-            virtual std::vector<std::pair<T, T>> getCutEdges() const;
+            virtual std::vector<std::pair<T, T>> cutEdges() const;
             // Returns a vector containing cut vertices.
-            virtual std::vector<T> getCutVertices() const;
+            virtual std::vector<T> cutVertices() const;
             // Returns a vector of vectors, where each vector contains vertices of a connected component.
-            virtual std::vector<std::vector<T>> getConnectedComponents() const;
+            virtual std::vector<std::vector<T>> connectedComponents() const;
             // Returns a vector of edges which are a part of a minimum spanning tree. If MST doesn't exist, returns an empty vector.
-            virtual std::vector<std::tuple<T, T, W>> getMinimumSpanningTree() const;
+            virtual std::vector<std::tuple<T, T, W>> minimumSpanningTree() const;
 
             // Returns 0 -> Not Eulerian, 1 -> Semi-Eulerian, 2 -> Eulerian.
             virtual int isEulerian() const;
             // Returns a vector containing the Eulerian path. If the graph is not Eulerian, returns an empty vector.
-            virtual std::vector<T> getEulerianPath() const;
+            virtual std::vector<T> eulerianPath() const;
 
             // Returns true of the graph contains a cycle.
             virtual bool isCyclic() const;
@@ -165,7 +165,7 @@ namespace Graph
             // Prints the Adjacency list of the graph along with weights.
             void printWeightedGraph() const;
             // Returns the degree of a vertex, if it exists. If the vertex doesn't exist, returns -1.
-            int getDegree(T) const;
+            int degree(T) const;
             // Returns true if the graph is empty, else false. 
             bool empty() const;
             // Utility function to check the (id - node) mapping.
@@ -194,9 +194,9 @@ namespace Graph
             const_edge_iterator cend(int) const;
 
         private:
-            void getCutEdgesUtil(unsigned int, unsigned int, unsigned int &, std::vector<std::pair<T, T>> &, std::unordered_set<unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, std::unordered_map<unsigned int, unsigned int> &) const;
-            void getCutVerticesUtil(unsigned int &, std::vector<T> &, std::unordered_set<unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, unsigned int, unsigned int) const;
-            virtual void getEulerianPathUtil(unsigned int, std::unordered_map<unsigned int, std::vector<Node<W>>> &, std::unordered_map<unsigned int, unsigned int> &, std::vector<T> &) const;
+            void cutEdgesUtil(unsigned int, unsigned int, unsigned int &, std::vector<std::pair<T, T>> &, std::unordered_set<unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, std::unordered_map<unsigned int, unsigned int> &) const;
+            void cutVerticesUtil(unsigned int &, std::vector<T> &, std::unordered_set<unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, unsigned int, unsigned int) const;
+            virtual void eulerianPathUtil(unsigned int, std::unordered_map<unsigned int, std::vector<Node<W>>> &, std::unordered_map<unsigned int, unsigned int> &, std::vector<T> &) const;
             virtual void isEulerianUtil(unsigned int, std::unordered_set<unsigned int> &) const;
             bool isCyclicUtil(unsigned int, std::unordered_set<unsigned int> &, unsigned int) const;
 
@@ -216,7 +216,7 @@ namespace Graph
     };
 }
 
-#include "UndirectedGraphDefs.hpp"
+#include "undirected_graph_defs.hpp"
 #include "const_node_iterator.hpp"
 #include "const_edge_iterator.hpp"
 #include "node_iterator.hpp"

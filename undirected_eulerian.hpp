@@ -1,12 +1,12 @@
 #ifndef EULERIAN_H
 #define EULERIAN_H
 
-#include "UndirectedGraph.hpp"
+#include "undirected_graph.hpp"
 
 namespace Graph
 {
     template<typename T, typename W>
-    int UndirectedGraph<T, W>::isEulerian() const
+    int undirected_graph<T, W>::isEulerian() const
     {
         // Empty graph is Eulerian.
         if(this->_ADJACENCY_LIST_.empty())
@@ -51,7 +51,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    void UndirectedGraph<T, W>::isEulerianUtil(unsigned int current, std::unordered_set<unsigned int> &Visited) const
+    void undirected_graph<T, W>::isEulerianUtil(unsigned int current, std::unordered_set<unsigned int> &Visited) const
     {
         // DFS.
         Visited.insert(current);
@@ -62,7 +62,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    std::vector<T> UndirectedGraph<T, W>::getEulerianPath() const
+    std::vector<T> undirected_graph<T, W>::eulerianPath() const
     {
         // Empty Eulerian Path for empty graph.
         if(this->_ADJACENCY_LIST_.empty())
@@ -106,7 +106,7 @@ namespace Graph
         // Find Eulerian Path using DFS from 'start'.
         std::vector<T> Path;
         std::unordered_map<unsigned int, std::vector<Node<W>>> _ADJ_LIST_COPY_ = this->_ADJACENCY_LIST_;
-        getEulerianPathUtil(start, _ADJ_LIST_COPY_, Degree, Path);
+        eulerianPathUtil(start, _ADJ_LIST_COPY_, Degree, Path);
 
         // If all non-zero degree vertices are connected then Eulerian Path is found, else return empty path.
         if(Path.size() != numOfEdges + 1)
@@ -116,7 +116,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    void UndirectedGraph<T, W>::getEulerianPathUtil(unsigned int current, std::unordered_map<unsigned int, std::vector<Node<W>>> &_ADJ_LIST_COPY_, std::unordered_map<unsigned int, unsigned int> &Degree, std::vector<T> &Path) const
+    void undirected_graph<T, W>::eulerianPathUtil(unsigned int current, std::unordered_map<unsigned int, std::vector<Node<W>>> &_ADJ_LIST_COPY_, std::unordered_map<unsigned int, unsigned int> &Degree, std::vector<T> &Path) const
     {
         unsigned int &degree = Degree.at(current);
         unsigned int next_edge;
@@ -133,7 +133,7 @@ namespace Graph
             next_edge = _ADJ_LIST_COPY_.at(current).at(degree).vertex;
             _ADJ_LIST_COPY_.at(current).at(degree) = Node<W>{0};
             *( std::find(_ADJ_LIST_COPY_.at(next_edge).begin(), _ADJ_LIST_COPY_.at(next_edge).end(), current) ) = Node<W>{0};
-            getEulerianPathUtil(next_edge, _ADJ_LIST_COPY_, Degree, Path);
+            eulerianPathUtil(next_edge, _ADJ_LIST_COPY_, Degree, Path);
         }
 
         // Add current node to the solution.

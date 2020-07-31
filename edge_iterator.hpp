@@ -1,14 +1,14 @@
 #ifndef EDGE_ITERATOR_H
 #define EDGE_ITERATOR_H
 
-#include "UndirectedGraph.hpp"
+#include "undirected_graph.hpp"
 
 namespace Graph
 {
     template<typename T, typename W>
-    class UndirectedGraph<T, W>::edge_iterator
+    class undirected_graph<T, W>::edge_iterator
     {
-        friend class UndirectedGraph<T, W>;
+        friend class undirected_graph<T, W>;
 
         private:
             typename std::unordered_map<unsigned int, std::vector<Node<W>>>::iterator _it_;
@@ -69,17 +69,17 @@ namespace Graph
 
 
     template<typename T, typename W>
-    UndirectedGraph<T, W>::edge_iterator::edge_iterator()
+    undirected_graph<T, W>::edge_iterator::edge_iterator()
     {
     }
 
     template<typename T, typename W>
-    UndirectedGraph<T, W>::edge_iterator::~edge_iterator()
+    undirected_graph<T, W>::edge_iterator::~edge_iterator()
     {
     }
 
     template<typename T, typename W>
-    UndirectedGraph<T, W>::edge_iterator::edge_iterator(const edge_iterator &rhs)
+    undirected_graph<T, W>::edge_iterator::edge_iterator(const edge_iterator &rhs)
         : _it_ ( rhs._it_ )
         , _it2_ ( rhs._it2_ )
         , _last_it_ ( rhs._last_it_ )
@@ -88,7 +88,7 @@ namespace Graph
     }
     
     template<typename T, typename W>
-    typename UndirectedGraph<T, W>::edge_iterator& UndirectedGraph<T, W>::edge_iterator::operator=(const edge_iterator &rhs)
+    typename undirected_graph<T, W>::edge_iterator& undirected_graph<T, W>::edge_iterator::operator=(const edge_iterator &rhs)
     {
         _it_ = rhs._it_;
         _it2_ = rhs._it2_;
@@ -98,7 +98,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    UndirectedGraph<T, W>::edge_iterator::edge_iterator(edge_iterator &&rhs) noexcept
+    undirected_graph<T, W>::edge_iterator::edge_iterator(edge_iterator &&rhs) noexcept
         : _it_ ( std::move(rhs._it_) )                          // Member-wise move phase.
         , _it2_ ( std::move(rhs._it2_) )
         , _last_it_ ( std::move(rhs._last_it_) )
@@ -108,7 +108,7 @@ namespace Graph
     }
     
     template<typename T, typename W>
-    typename UndirectedGraph<T, W>::edge_iterator& UndirectedGraph<T, W>::edge_iterator::operator=(edge_iterator &&rhs) noexcept
+    typename undirected_graph<T, W>::edge_iterator& undirected_graph<T, W>::edge_iterator::operator=(edge_iterator &&rhs) noexcept
     {
         // Clean-up phase is not required(as the pointer is not used for ownership of memory).
     
@@ -126,7 +126,7 @@ namespace Graph
 
     // Private constructor. Only move version is sufficienct.
     template<typename T, typename W>
-    UndirectedGraph<T, W>::edge_iterator::edge_iterator(const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::iterator &rhs, const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::iterator &rhs3, std::unordered_map<unsigned int, T> *_id_to_node_, const typename std::vector<Node<W>>::iterator &rhs2)
+    undirected_graph<T, W>::edge_iterator::edge_iterator(const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::iterator &rhs, const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::iterator &rhs3, std::unordered_map<unsigned int, T> *_id_to_node_, const typename std::vector<Node<W>>::iterator &rhs2)
         : _it_ ( std::move(rhs) )                       // Member-wise move phase.
         , _it2_ ( std::move(rhs2) )
         , _last_it_ ( std::move(rhs3) )
@@ -136,19 +136,19 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool UndirectedGraph<T, W>::edge_iterator::operator==(const edge_iterator &rhs) const
+    bool undirected_graph<T, W>::edge_iterator::operator==(const edge_iterator &rhs) const
     {
         return _it2_ == rhs._it2_;
     }
 
     template<typename T, typename W>
-    bool UndirectedGraph<T, W>::edge_iterator::operator!=(const edge_iterator &rhs) const
+    bool undirected_graph<T, W>::edge_iterator::operator!=(const edge_iterator &rhs) const
     {
         return _it2_ != rhs._it2_;
     }
 
     template<typename T, typename W>
-    typename UndirectedGraph<T, W>::edge_iterator& UndirectedGraph<T, W>::edge_iterator::operator++()
+    typename undirected_graph<T, W>::edge_iterator& undirected_graph<T, W>::edge_iterator::operator++()
     {
         // If it is not last non-empty mapping, but last element in current mapping, then goto next mapping.
         if(_it2_ == _it_->second.end() - 1 && _it_ != _last_it_)
@@ -166,7 +166,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    typename UndirectedGraph<T, W>::edge_iterator UndirectedGraph<T, W>::edge_iterator::operator++(int)
+    typename undirected_graph<T, W>::edge_iterator undirected_graph<T, W>::edge_iterator::operator++(int)
     {
         edge_iterator old = *this;
 
@@ -186,25 +186,25 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    std::pair<const T&, const T&> UndirectedGraph<T, W>::edge_iterator::operator*() const
+    std::pair<const T&, const T&> undirected_graph<T, W>::edge_iterator::operator*() const
     {
         return std::pair<T&, T&>( _id_to_node_ptr_->at(_it_->first), _id_to_node_ptr_->at(_it2_->vertex) );
     }
 
     template<typename T, typename W>
-    std::pair<const T*, const T*> UndirectedGraph<T, W>::edge_iterator::operator->() const
+    std::pair<const T*, const T*> undirected_graph<T, W>::edge_iterator::operator->() const
     {
         return std::pair<T*, T*>( &(_id_to_node_ptr_->at(_it_->first)), &(_id_to_node_ptr_->at(_it2_->vertex)) );
     }
 
     template<typename T, typename W>
-    void UndirectedGraph<T, W>::edge_iterator::setWeight(W weight)
+    void undirected_graph<T, W>::edge_iterator::setWeight(W weight)
     {
         _it2_->weight = weight;
     }
 
     template<typename T, typename W>
-    W UndirectedGraph<T, W>::edge_iterator::getWeight() const
+    W undirected_graph<T, W>::edge_iterator::getWeight() const
     {
         return _it2_->weight;
     }

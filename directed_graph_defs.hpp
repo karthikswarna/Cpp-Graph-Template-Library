@@ -1,17 +1,17 @@
 #ifndef DIRECTED_GRAPH_DEFINITIONS_H
 #define DIRECTED_GRAPH_DEFINITIONS_H
 
-#include "DirectedGraph.hpp"
+#include "directed_graph.hpp"
 
 namespace Graph
 {
     template<typename T, typename W>
-    DirectedGraph<T, W>::DirectedGraph() noexcept
+    directed_graph<T, W>::directed_graph() noexcept
     {
     }
 
     template<typename T, typename W>
-    DirectedGraph<T, W>::~DirectedGraph() noexcept 
+    directed_graph<T, W>::~directed_graph() noexcept 
     { 
         this->_ADJACENCY_LIST_.clear();
         this->_id_to_node_.clear();
@@ -19,13 +19,13 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    DirectedGraph<T, W>::DirectedGraph(const DirectedGraph &rhs) noexcept
-        : Graph::UndirectedGraph<T>(rhs)
+    directed_graph<T, W>::directed_graph(const directed_graph &rhs) noexcept
+        : Graph::undirected_graph<T>(rhs)
     {
     }
 
     template<typename T, typename W>
-    DirectedGraph<T, W>& DirectedGraph<T, W>::operator=(const DirectedGraph &rhs) noexcept
+    directed_graph<T, W>& directed_graph<T, W>::operator=(const directed_graph &rhs) noexcept
     {
         this->_ADJACENCY_LIST_ = rhs._ADJACENCY_LIST_;
         this->_id_to_node_ = rhs._id_to_node_;
@@ -37,13 +37,13 @@ namespace Graph
     }
     
     template<typename T, typename W>
-    DirectedGraph<T, W>::DirectedGraph(DirectedGraph &&rhs) noexcept
-        : Graph::UndirectedGraph<T>(rhs)
+    directed_graph<T, W>::directed_graph(directed_graph &&rhs) noexcept
+        : Graph::undirected_graph<T>(rhs)
     {
     }
 
     template<typename T, typename W>
-    DirectedGraph<T, W>& DirectedGraph<T, W>::operator=(DirectedGraph &&rhs) noexcept
+    directed_graph<T, W>& directed_graph<T, W>::operator=(directed_graph &&rhs) noexcept
     {
         this->_ADJACENCY_LIST_ = std::move(rhs._ADJACENCY_LIST_);
         this->_id_to_node_ = std::move(rhs._id_to_node_);
@@ -55,7 +55,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool DirectedGraph<T, W>::addEdge(T vertex1, T vertex2, W weight)
+    bool directed_graph<T, W>::addEdge(T vertex1, T vertex2, W weight)
     {
         try
         {
@@ -99,7 +99,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool DirectedGraph<T, W>::addEdges(const std::vector<std::pair<T, T>> &edges)
+    bool directed_graph<T, W>::addEdges(const std::vector<std::pair<T, T>> &edges)
     {
         try
         {
@@ -144,7 +144,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool DirectedGraph<T, W>::addEdges(const std::vector<std::tuple<T, T, W>> &edges)
+    bool directed_graph<T, W>::addEdges(const std::vector<std::tuple<T, T, W>> &edges)
     {
         try
         {
@@ -195,7 +195,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool DirectedGraph<T, W>::removeEdge(T vertex1, T vertex2)
+    bool directed_graph<T, W>::removeEdge(T vertex1, T vertex2)
     {
         try
         {
@@ -221,7 +221,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool DirectedGraph<T, W>::removeEdges(const std::vector<std::pair<T, T>> &edges)
+    bool directed_graph<T, W>::removeEdges(const std::vector<std::pair<T, T>> &edges)
     {
         try
         {
@@ -253,7 +253,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool DirectedGraph<T, W>::removeEdge(T vertex1, T vertex2, W weight)
+    bool directed_graph<T, W>::removeEdge(T vertex1, T vertex2, W weight)
     {
         try
         {
@@ -279,7 +279,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool DirectedGraph<T, W>::removeEdges(const std::vector<std::tuple<T, T, W>> &edges)
+    bool directed_graph<T, W>::removeEdges(const std::vector<std::tuple<T, T, W>> &edges)
     {
         try
         {
@@ -312,7 +312,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    std::vector<std::vector<T>> DirectedGraph<T, W>::getStronglyConnectedComponents() const
+    std::vector<std::vector<T>> directed_graph<T, W>::stronglyConnectedComponents() const
     {
         unsigned int id = 0;
         std::stack<unsigned int> S;
@@ -324,13 +324,13 @@ namespace Graph
         // A SCC is a subtree in a DFS tree. So, start DFS for every tree in DFS forest to find all SCC's.
         for(const std::pair<unsigned int, T> &vertex : this->_id_to_node_)
             if(Ids.find(vertex.first) == Ids.end())
-                getSCCUtil(vertex.first, id, S, onStack, Ids, Low, SCC);
+                stronglyConnectedComponentsUtil(vertex.first, id, S, onStack, Ids, Low, SCC);
             
         return SCC;
     }
 
     template<typename T, typename W>
-    void DirectedGraph<T, W>::getSCCUtil(unsigned int current, unsigned int id, std::stack<unsigned int> &S, std::unordered_set<unsigned int> &onStack, std::unordered_map<unsigned int, unsigned int> &Ids, std::unordered_map<unsigned int, unsigned int> &Low, std::vector<std::vector<T>> &SCC) const
+    void directed_graph<T, W>::stronglyConnectedComponentsUtil(unsigned int current, unsigned int id, std::stack<unsigned int> &S, std::unordered_set<unsigned int> &onStack, std::unordered_map<unsigned int, unsigned int> &Ids, std::unordered_map<unsigned int, unsigned int> &Low, std::vector<std::vector<T>> &SCC) const
     {
         // As soon as a node is visited, push it onto the stack and assign it an id and a low-link value.
         S.push(current);
@@ -342,7 +342,7 @@ namespace Graph
         {
             // Do DFS for unvisited nodes.
             if(Ids.find(next.vertex) == Ids.end())
-                getSCCUtil(next.vertex, id, S, onStack, Ids, Low, SCC);
+                stronglyConnectedComponentsUtil(next.vertex, id, S, onStack, Ids, Low, SCC);
             
             // If the 'next' is on the stack, it means that there is a path from 'next' to 'current' which we used to visit 'current'. But now there is also a path from 'current' to 'next'.
             // So, 'current', 'next' belong to same SCC. This step allows low-link values to propagate throughout cycles.
@@ -374,7 +374,7 @@ namespace Graph
 
     // Different method for finding cycles in a directed graph. This is based on detecting back-edges in DFS forest.
     // template<typename T, typename W>
-    // bool UndirectedGraph<T, W>::isCyclic() const
+    // bool undirected_graph<T, W>::isCyclic() const
     // {
     //     std::unordered_set<unsigned int> Visited;
     //     std::unordered_set<unsigned int> recStack;
@@ -387,7 +387,7 @@ namespace Graph
     // }
 
     // template<typename T, typename W>
-    // bool UndirectedGraph<T, W>::isCyclicUtil(unsigned int current, std::unordered_set<unsigned int> &Visited, std::unordered_set<unsigned int> &recStack) const
+    // bool undirected_graph<T, W>::isCyclicUtil(unsigned int current, std::unordered_set<unsigned int> &Visited, std::unordered_set<unsigned int> &recStack) const
     // {
     //     if(Visited.find(current) == Visited.end())
     //     {
@@ -413,7 +413,7 @@ namespace Graph
     // }
 
     template<typename T, typename W>
-    bool DirectedGraph<T, W>::isCyclic() const
+    bool directed_graph<T, W>::isCyclic() const
     {
         std::unordered_set<unsigned int> whiteSet;      // Unvisited
         std::unordered_set<unsigned int> greySet;       // Visited, but not completely processed.
@@ -432,7 +432,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    bool DirectedGraph<T, W>::isCyclicUtil(unsigned int start, std::unordered_set<unsigned int> &whiteSet, std::unordered_set<unsigned int> &greySet, std::unordered_set<unsigned int> &blackSet) const
+    bool directed_graph<T, W>::isCyclicUtil(unsigned int start, std::unordered_set<unsigned int> &whiteSet, std::unordered_set<unsigned int> &greySet, std::unordered_set<unsigned int> &blackSet) const
     {
         greySet.insert(start);
         whiteSet.erase(start);
@@ -453,7 +453,7 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    std::vector<T> DirectedGraph<T, W>::getTopologicalSort() const
+    std::vector<T> directed_graph<T, W>::topologicalSort() const
     {
         if(isCyclic())
             return std::vector<T>{};
@@ -464,26 +464,26 @@ namespace Graph
 
         for(const std::pair<unsigned int, std::vector<Node<W>>> &edges : this->_ADJACENCY_LIST_)
             if(Visited.find(edges.first) == Visited.end())
-                index = getTopologicalSortUtil(index, edges.first, Visited, TopSort);
+                index = topologicalSortUtil(index, edges.first, Visited, TopSort);
 
         return TopSort;
     }
 
     template<typename T, typename W>
-    unsigned int DirectedGraph<T, W>::getTopologicalSortUtil(unsigned int index, unsigned int start, std::unordered_set<unsigned int> &Visited, std::vector<T> &TopSort) const
+    unsigned int directed_graph<T, W>::topologicalSortUtil(unsigned int index, unsigned int start, std::unordered_set<unsigned int> &Visited, std::vector<T> &TopSort) const
     {
         Visited.insert(start);
 
         for(Node<W> dest : this->_ADJACENCY_LIST_.at(start))
             if(Visited.find(dest.vertex) == Visited.end())
-                index = getTopologicalSortUtil(index, dest.vertex, Visited, TopSort);
+                index = topologicalSortUtil(index, dest.vertex, Visited, TopSort);
 
         TopSort[index] = this->_id_to_node_.at(start);
         return index - 1;
     }
     
     template<typename T, typename W>
-    std::pair<int, int> DirectedGraph<T, W>::getDegree(T vertex) const
+    std::pair<int, int> directed_graph<T, W>::degree(T vertex) const
     {
         if(this->_node_to_id_.find(vertex) != this->_node_to_id_.end())
         {
@@ -504,6 +504,6 @@ namespace Graph
     }
 }
 
-#include "DirectedEulerian.hpp"
+#include "directed_eulerian.hpp"
 
 #endif

@@ -1,31 +1,31 @@
 #ifndef DIRECTED_GRAPH_H
 #define DIRECTED_GRAPH_H
 
-#include "UndirectedGraph.hpp"
+#include "undirected_graph.hpp"
 
 namespace Graph
 {
     template<typename T, typename W = int>
-    class DirectedGraph : public UndirectedGraph<T, W>
+    class directed_graph : public undirected_graph<T, W>
     {
         public:
             /*
              * SPECIAL MEMBER FUNCTIONS
              */
             // Default constructor
-            DirectedGraph() noexcept;
+            directed_graph() noexcept;
             // Destructor
-            ~DirectedGraph() noexcept;
+            ~directed_graph() noexcept;
             
             //Copy Constructor
-            DirectedGraph(const DirectedGraph &) noexcept;
+            directed_graph(const directed_graph &) noexcept;
             // Copy assignment operator
-            DirectedGraph& operator=(const DirectedGraph &) noexcept;
+            directed_graph& operator=(const directed_graph &) noexcept;
             
             // Move constructor
-            DirectedGraph(DirectedGraph &&) noexcept;
+            directed_graph(directed_graph &&) noexcept;
             // Move assignment operator
-            DirectedGraph& operator=(DirectedGraph &&) noexcept;
+            directed_graph& operator=(directed_graph &&) noexcept;
 
 
             /*
@@ -53,33 +53,33 @@ namespace Graph
              * CONST MEMBER FUNCTIONS
              */
             // Returns the topological srt of the directed graph.
-            std::vector<T> getTopologicalSort() const;
+            std::vector<T> topologicalSort() const;
             // Returns a vector of vectors, where each vector contains vertices of a strongly connected component.
-            std::vector<std::vector<T>> getStronglyConnectedComponents() const;
+            std::vector<std::vector<T>> stronglyConnectedComponents() const;
 
             // Returns 0 -> Not Eulerian, 1 -> Semi-Eulerian, 2 -> Eulerian.
             int isEulerian() const;
             // Returns a vector containing the Eulerian path. If the graph is not Eulerian, returns an empty vector.
-            std::vector<T> getEulerianPath() const;
+            std::vector<T> eulerianPath() const;
 
             // Returns true if the graph is cyclic, else returns false.
             bool isCyclic() const;
             // Returns the (in-degree, out-degree) of a vertex as std::pair<int, int>, if the vertex exists. If the vertex doesn't exist, returns -1.
-            std::pair<int, int> getDegree(T) const;
+            std::pair<int, int> degree(T) const;
         
         private:
-            using UndirectedGraph<T, W>::getCutEdges;
-            using UndirectedGraph<T, W>::getCutVertices;
-            using UndirectedGraph<T, W>::getConnectedComponents;
-            using UndirectedGraph<T, W>::getMinimumSpanningTree;
+            using undirected_graph<T, W>::cutEdges;
+            using undirected_graph<T, W>::cutVertices;
+            using undirected_graph<T, W>::connectedComponents;
+            using undirected_graph<T, W>::minimumSpanningTree;
 
-            unsigned int getTopologicalSortUtil(unsigned int, unsigned int, std::unordered_set<unsigned int> &, std::vector<T> &) const;
-            void getSCCUtil(unsigned int, unsigned int, std::stack<unsigned int> &, std::unordered_set<unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, std::vector<std::vector<T>> &) const;
-            void getEulerianPathUtil(unsigned int, std::unordered_map<unsigned int, unsigned int> &, std::vector<T> &) const;
+            unsigned int topologicalSortUtil(unsigned int, unsigned int, std::unordered_set<unsigned int> &, std::vector<T> &) const;
+            void stronglyConnectedComponentsUtil(unsigned int, unsigned int, std::stack<unsigned int> &, std::unordered_set<unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, std::vector<std::vector<T>> &) const;
+            void eulerianPathUtil(unsigned int, std::unordered_map<unsigned int, unsigned int> &, std::vector<T> &) const;
             bool isCyclicUtil(unsigned int, std::unordered_set<unsigned int> &, std::unordered_set<unsigned int> &, std::unordered_set<unsigned int> &) const;
     };
 }
 
-#include "DirectedGraphDefs.hpp"
+#include "directed_graph_defs.hpp"
 
 #endif
