@@ -3,7 +3,7 @@
 
 #include "directed_graph.hpp"
 
-namespace Graph
+namespace graph
 {
     template<typename T, typename W>
     directed_graph<T, W>::directed_graph() noexcept
@@ -20,7 +20,7 @@ namespace Graph
 
     template<typename T, typename W>
     directed_graph<T, W>::directed_graph(const directed_graph &rhs) noexcept
-        : Graph::undirected_graph<T>(rhs)
+        : graph::undirected_graph<T>(rhs)
     {
     }
 
@@ -38,7 +38,7 @@ namespace Graph
     
     template<typename T, typename W>
     directed_graph<T, W>::directed_graph(directed_graph &&rhs) noexcept
-        : Graph::undirected_graph<T>(rhs)
+        : graph::undirected_graph<T>(rhs)
     {
     }
 

@@ -3,7 +3,7 @@
 
 #include "node_iterator.hpp"
 
-namespace Graph
+namespace graph
 {
     template<typename T, typename W>
     class undirected_graph<T, W>::const_node_iterator

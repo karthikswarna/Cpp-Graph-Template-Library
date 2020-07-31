@@ -3,7 +3,7 @@
 
 #include "undirected_graph.hpp"
 
-namespace Graph
+namespace graph
 {
     template<typename T, typename W>
     int undirected_graph<T, W>::isEulerian() const

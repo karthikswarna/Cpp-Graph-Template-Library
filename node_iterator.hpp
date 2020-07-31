@@ -3,7 +3,7 @@
 
 #include "undirected_graph.hpp"
 
-namespace Graph
+namespace graph
 {
     template<typename T, typename W>
     class undirected_graph<T, W>::node_iterator
@@ -174,7 +174,7 @@ namespace Graph
         {
             unsigned int id = _it_->first;
             _node_to_id_ptr_->erase(_id_to_node_ptr_->at(id));  // Removing the old entry in _node_to_id_.
-            _node_to_id_ptr_->insert({node, id});                        // Adding the new entry in _node_to_id_.
+            _node_to_id_ptr_->insert({node, id});               // Adding the new entry in _node_to_id_.
             _id_to_node_ptr_->at(id) = node;                    // Changing the node value in _id_to_node_.
         }
     }

@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-namespace Graph
+namespace graph
 {
     template<typename W = int>
     class Node
@@ -115,12 +115,8 @@ namespace Graph
             /*
              *  CONST MEMBER FUNCTIONS
              */
-            // Helper function to print DFS; takes starting vertex and set of visited vertices.
-            void printDFS(unsigned int, std::unordered_set<unsigned int> &) const;
             // Function to print DFS; prints each connected component on different line.
             void printDFS() const;
-            // Helper function to print BFS; takes starting vertex and set of visited vertices.
-            void printBFS(unsigned int, std::unordered_set<unsigned int> &) const;
             // Function to print BFS; prints each connected component on different line.
             void printBFS() const;
 
@@ -194,6 +190,8 @@ namespace Graph
             const_edge_iterator cend(int) const;
 
         private:
+            void printBFSUtil(unsigned int, std::unordered_set<unsigned int> &) const;
+            void printDFSUtil(unsigned int, std::unordered_set<unsigned int> &) const;
             void cutEdgesUtil(unsigned int, unsigned int, unsigned int &, std::vector<std::pair<T, T>> &, std::unordered_set<unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, std::unordered_map<unsigned int, unsigned int> &) const;
             void cutVerticesUtil(unsigned int &, std::vector<T> &, std::unordered_set<unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, std::unordered_map<unsigned int, unsigned int> &, unsigned int, unsigned int) const;
             virtual void eulerianPathUtil(unsigned int, std::unordered_map<unsigned int, std::vector<Node<W>>> &, std::unordered_map<unsigned int, unsigned int> &, std::vector<T> &) const;

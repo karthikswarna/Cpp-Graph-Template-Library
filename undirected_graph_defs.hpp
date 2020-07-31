@@ -3,7 +3,7 @@
 
 #include "undirected_graph.hpp"
 
-namespace Graph
+namespace graph
 {
     /*
      * ITERATOR RELATED FUNCTIONS
@@ -827,7 +827,23 @@ namespace Graph
     }
 
     template<typename T, typename W>
-    void undirected_graph<T, W>::printDFS(unsigned int start, std::unordered_set<unsigned int> &Visited) const
+    void undirected_graph<T, W>::printDFS() const
+    {
+        std::cout << "DEPTH FIRST SEARCH\n";
+
+        std::unordered_set<unsigned int> Visited;
+        for(const std::pair<unsigned int, std::vector<Node<W>>> &edges : this->_ADJACENCY_LIST_)
+        {
+            if(Visited.find(edges.first) == Visited.end())
+            {
+                printDFSUtil(edges.first, Visited);
+                std::cout << '\n';
+            }
+        }
+    }
+
+    template<typename T, typename W>
+    void undirected_graph<T, W>::printDFSUtil(unsigned int start, std::unordered_set<unsigned int> &Visited) const
     {
         Visited.insert(start);
         std::cout << this->_id_to_node_.at(start);
@@ -838,29 +854,29 @@ namespace Graph
             if(Visited.find(N.vertex) == Visited.end())
             {
                 std::cout << " -> ";
-                printDFS(N.vertex, Visited);
+                printDFSUtil(N.vertex, Visited);
             }
         }
     }
 
     template<typename T, typename W>
-    void undirected_graph<T, W>::printDFS() const
+    void undirected_graph<T, W>::printBFS() const
     {
-        std::cout << "DEPTH FIRST SEARCH\n";
+        std::cout << "BREADTH FIRST SEARCH" << '\n';
 
         std::unordered_set<unsigned int> Visited;
         for(const std::pair<unsigned int, std::vector<Node<W>>> &edges : this->_ADJACENCY_LIST_)
         {
             if(Visited.find(edges.first) == Visited.end())
             {
-                printDFS(edges.first, Visited);
-                std::cout << '\n';
+                Visited.insert(edges.first);
+                printBFSUtil(edges.first, Visited);
             }
         }
     }
 
     template<typename T, typename W>
-    void undirected_graph<T, W>::printBFS(unsigned int start, std::unordered_set<unsigned int> &Visited) const
+    void undirected_graph<T, W>::printBFSUtil(unsigned int start, std::unordered_set<unsigned int> &Visited) const
     {
         std::queue<unsigned int> Q;
         std::vector<unsigned int> path;
@@ -892,22 +908,6 @@ namespace Graph
                 std::cout << " -> ";
         }
         std::cout << '\n';
-    }
-
-    template<typename T, typename W>
-    void undirected_graph<T, W>::printBFS() const
-    {
-        std::cout << "BREADTH FIRST SEARCH" << '\n';
-
-        std::unordered_set<unsigned int> Visited;
-        for(const std::pair<unsigned int, std::vector<Node<W>>> &edges : this->_ADJACENCY_LIST_)
-        {
-            if(Visited.find(edges.first) == Visited.end())
-            {
-                Visited.insert(edges.first);
-                printBFS(edges.first, Visited);
-            }
-        }
     }
 
     template<typename T, typename W>

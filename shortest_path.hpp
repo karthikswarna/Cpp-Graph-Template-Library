@@ -3,7 +3,7 @@
 
 #include "undirected_graph.hpp"
 
-namespace Graph
+namespace graph
 {
     template<typename T, typename W>
     double undirected_graph<T, W>::shortestDistance(T start, T end) const

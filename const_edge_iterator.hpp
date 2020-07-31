@@ -3,7 +3,7 @@
 
 #include "edge_iterator.hpp"
 
-namespace Graph
+namespace graph
 {
     template<typename T, typename W>
     class undirected_graph<T, W>::const_edge_iterator
@@ -17,8 +17,8 @@ namespace Graph
             typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator _last_it_;
 
             const_edge_iterator(const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator &,    // Gives iterator to the adjacency list(current iterator).
-                                const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator &,    // Gives iterator to the last non-empty mapping in the container(used in bound checking, this is constant for a Graph if not new edges are added).
-                                std::unordered_map<unsigned int, T> const*,                                                 // Reference to the _id_to_node_ in the Graph.
+                                const typename std::unordered_map<unsigned int, std::vector<Node<W>>>::const_iterator &,    // Gives iterator to the last non-empty mapping in the container(used in bound checking, this is constant for a graph if not new edges are added).
+                                std::unordered_map<unsigned int, T> const*,                                                 // Reference to the _id_to_node_ in the graph.
                                 const typename std::vector<Node<W>>::const_iterator & = (std::vector<Node<W>>{}).begin());  // Gives iterator to the vector in the current mapping.
 
         public:

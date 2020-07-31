@@ -3,7 +3,7 @@
 
 #include "undirected_graph.hpp"
 
-namespace Graph
+namespace graph
 {
     template<typename T, typename W = int>
     class directed_graph : public undirected_graph<T, W>
